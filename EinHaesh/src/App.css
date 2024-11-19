@@ -1,0 +1,18 @@
+.main{
+  display:flex;
+  width:100vw;
+  height:100vh;
+  flex-direction: row-reverse;
+}
+
+.updates-wrapper{
+  background-color: black;
+  flex:1;
+  color: white;
+}
+
+.map-wrapper{
+  background-color: gray;
+  color: white;
+  flex:3;
+}
