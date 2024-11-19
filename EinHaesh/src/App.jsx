@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+import Map from './components/Map'
 import './App.css'
 
 function App() {
@@ -10,7 +11,7 @@ function App() {
     <>
       <div className='main'>
        <div className='updates-wrapper'>דיווחים ועדכונים</div>
-       <div className='map-wrapper'>מפה</div>
+       <div className='map-wrapper'><Map></Map></div>
       </div>
     </>
   )
