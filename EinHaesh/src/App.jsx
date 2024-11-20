@@ -4,7 +4,7 @@ import viteLogo from '/vite.svg'
 import Map from './components/Map'
 import './App.css'
 import 'leaflet-draw/dist/leaflet.draw.css';
-import AlertWithToastify from './components/Alerts.Jsx';
+import AlertWithToastify from './components/Alerts';
 
 
 function App() {
