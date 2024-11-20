@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import React from 'react';
-import { MapContainer, TileLayer, ImageOverlay, Marker, FeatureGroup, Popup, Polyline, Polygon,useMapEvents  } from 'react-leaflet';
+import { MapContainer, TileLayer, ImageOverlay, Marker, FeatureGroup, Popup, Polyline, Polygon, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import basePlan from '../assets/agaf_1.png';
@@ -15,11 +15,11 @@ const Map = () => {
   const [activeAction, setActiveAction] = useState();
   const [markers, setMarkers] = useState([]);
 
-//   const path = [
-//     markers[0].position, // מיקום נקודה 1
-//     markers[1].position, // מיקום נקודה 2
-//     markers[2].position, // מיקום נקודה 3
-//   ];
+  //   const path = [
+  //     markers[0].position, // מיקום נקודה 1
+  //     markers[1].position, // מיקום נקודה 2
+  //     markers[2].position, // מיקום נקודה 3
+  //   ];
 
   const smokeZone = [
     [190, 100],
@@ -44,7 +44,7 @@ const Map = () => {
       }
     });
   };
-  
+
 
   return (
     <>
@@ -60,7 +60,7 @@ const Map = () => {
           bounds={bounds}
         />
         {markers.map((marker, index) => (
-          <Marker key={index} position={marker.position}>
+          <Marker key={index}{...marker}>
             <Popup>{marker.popup}</Popup>
           </Marker>
         ))}
@@ -72,7 +72,7 @@ const Map = () => {
           fillColor="rgba(255, 0, 0, 0.5)" // צבע המילוי עם שקיפות
           weight={2} // רוחב הגבול
         />
- <MapClickHandler />
+        <MapClickHandler />
       </MapContainer>
     </>
   );
