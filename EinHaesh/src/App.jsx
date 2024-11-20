@@ -1,22 +1,21 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import Map from './components/Map'
-import './App.css'
-import 'leaflet-draw/dist/leaflet.draw.css';
-
+import { useState } from 'react';
+import './App.css';
+import MapPage from './components/MapPage';
+import ReportsPage from './components/ReportsPage';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [location, setLocation] = useState(null); // מיקום שנבחר במפה
 
   return (
-    <>
-      <div className='main'>
-       <div className='updates-wrapper'>דיווחים ועדכונים</div>
-       <div className='map-wrapper'><Map></Map></div>
+    <div className="main">
+      <div className="map-wrapper">
+        <MapPage setLocation={setLocation} />
       </div>
-    </>
-  )
+      <div className="updates-wrapper">
+        <ReportsPage location={location} />
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default App;

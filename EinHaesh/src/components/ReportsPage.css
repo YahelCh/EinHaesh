@@ -1,0 +1,116 @@
+/* ReportPage CSS */
+.report-page {
+  padding: 20px;
+  background-color: #1a1a1a;
+  color: white;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* עיצוב textarea */
+textarea {
+  width: 100%;
+  height: 150px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #333;
+  color: white;
+  resize: none; /* מבטל את אפשרות הגודל החופשי */
+}
+
+/* עיצוב כפתורים */
+button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+/* הצגת הדיווחים */
+.reports-list {
+  margin-top: 20px;
+}
+
+.reports-list div {
+  background-color: #2c2c2c;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.reports-list div p {
+  margin: 5px 0;
+}
+
+/* מבנה ה-flexbox של המסך */
+.main {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: row; /* סדר רכיבים מצד לצד */
+}
+
+.map-wrapper {
+  color: white;
+  flex: 3;
+  position: relative;
+  /* כאן יוצג המפה */
+}
+
+.updates-wrapper {
+  background-color: black;
+  flex: 1;
+  color: white;
+  position: relative;
+  order: 1; /* מציב את ה-div בצד ימין */
+  padding: 20px;
+  overflow-y: auto; /* לאפשר גלילה אם יש יותר מדי תוכן */
+}
+
+/* העיצוב של הסרגל */
+.actions-bar {
+  width: 100%;
+  height: 55px;
+  display: flex;
+  border-radius: 0 0 5% 5%;
+  background-color: #363636;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
+
+/* עיצוב כל אייקון בסרגל */
+.action .icon {
+  width: 25px;
+  height: 25px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.action {
+  width: 50px;
+  height: 50px;
+  border-radius: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px; /* קצת ריווח בין האייקונים */
+}
+
+/* עיצוב בתגובה לפעולות על אייקונים */
+.action:hover,
+.action:focus {
+  background-color: #6d6e6e;
+}
+
+.action:active {
+  background-color: #6d6e6e;
+}
