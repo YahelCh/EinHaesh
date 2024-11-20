@@ -15,6 +15,7 @@
   /* background-color: gray; */
   color: white;
   flex: 3;
+  position:relative
 }
 
 .actions-bar {
@@ -24,6 +25,9 @@
   border-radius: 0 0 5% 5%;
   background-color: #363636;
   justify-content: center;
+  position: absolute;
+  top:0;
+  z-index: 1;
 }
 
 .action .icon {
@@ -59,4 +63,11 @@
 /* On active (click) */
 .action:active {
   background-color: #6d6e6e; /* Even lighter color */
+}
+
+.map-legend{
+  position: relative;
+  background-color: blanchedalmond;
+  width:200px;
+  height:400px;
 }

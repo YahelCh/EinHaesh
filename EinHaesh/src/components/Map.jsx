@@ -1,31 +1,34 @@
 import { useState, useRef } from 'react';
 import React from 'react';
-import { MapContainer, TileLayer, ImageOverlay, Marker, FeatureGroup, Popup, Polyline, Polygon,useMapEvents  } from 'react-leaflet';
+import { MapContainer, TileLayer, ImageOverlay, Marker, FeatureGroup, Popup, Polyline, Polygon, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import basePlan from '../assets/agaf_1.png';
+import basePlan from '../assets/Hospital_Floor_Plan_700x700.png';
 import { EditControl } from 'react-leaflet-draw';
 import ActionsBar from './ActionsBar';
 import iconDivuach from '../assets/speech-bubble.png'
+import MapLegend from './MapLegend'
 
 
-const bounds = [[0, 0], [337, 211]]; // גבולות התמונה ביחידות מותאמות
+const bounds = [[0, 0], [700, 700]]; // גבולות התמונה ביחידות מותאמות
 
 const Map = () => {
   const [activeAction, setActiveAction] = useState();
   const [markers, setMarkers] = useState([]);
 
-//   const path = [
-//     markers[0].position, // מיקום נקודה 1
-//     markers[1].position, // מיקום נקודה 2
-//     markers[2].position, // מיקום נקודה 3
-//   ];
+  //   const path = [
+  //     markers[0].position, // מיקום נקודה 1
+  //     markers[1].position, // מיקום נקודה 2
+  //     markers[2].position, // מיקום נקודה 3
+  //   ];
 
   const smokeZone = [
-    [190, 100],
-    [200, 150],
-    [190, 150],
-    [200, 50]
+    [173, 42],
+    [173, 70],
+    [113, 70],
+
+    [113, 42]
+
   ];
 
   const MapClickHandler = () => {
@@ -33,6 +36,8 @@ const Map = () => {
       click(event) {
         if (activeAction && activeAction.icon) { // בדוק אם יש אייקון פעיל
           const newMarker = event.latlng; // מיקום הלחיצה
+          console.log(event.latlng);
+
           const icon = L.icon({
             iconUrl: iconDivuach, // השתמש באייקון שהמשתמש בחר
             iconSize: [32, 32], // גודל האייקון
@@ -44,13 +49,13 @@ const Map = () => {
       }
     });
   };
-  
+
 
   return (
     <>
       <ActionsBar setActiveAction={setActiveAction} />
       <MapContainer
-        center={[152, 105]} // נקודת ההתחלה של התצוגה
+        center={[350, 350]} // נקודת ההתחלה של התצוגה
         zoom={-1} // שליטה ברמת הזום
         style={{ height: "100vh", width: "100%" }}
         crs={L.CRS.Simple} // משתמשים בקואורדינטות פשוטות ולא גיאוגרפיות
@@ -72,8 +77,9 @@ const Map = () => {
           fillColor="rgba(255, 0, 0, 0.5)" // צבע המילוי עם שקיפות
           weight={2} // רוחב הגבול
         />
- <MapClickHandler />
+        <MapClickHandler />
       </MapContainer>
+      {/* <MapLegend/> */}
     </>
   );
 };
