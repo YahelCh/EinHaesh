@@ -20,7 +20,8 @@ const Map = () => {
   //     markers[1].position, // מיקום נקודה 2
   //     markers[2].position, // מיקום נקודה 3
   //   ];
-
+  const [alertPosition, setAlertPosition] = useState(null); 
+  
   const smokeZone = [
     [190, 100],
     [200, 150],
