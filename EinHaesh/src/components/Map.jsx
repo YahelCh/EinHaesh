@@ -8,7 +8,7 @@ import ActionsBar from './ActionsBar';
 
 const bounds = [[0, 0], [700, 700]]; // גבולות התמונה ביחידות מותאמות
 
-const MapPage = () => {
+const Map = () => {
   const [activeAction, setActiveAction] = useState();
   const [markers, setMarkers] = useState([]);
   const [zones, setZones] = useState([
@@ -148,4 +148,4 @@ const MapPage = () => {
   );
 };
 
-export default MapPage;
+export default Map;

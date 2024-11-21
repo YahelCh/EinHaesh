@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './App.css';
-import MapPage from './components/MapPage';
+import Map from './components/Map';
 import ReportsPage from './components/ReportsPage';
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="main">
       <div className="map-wrapper">
-        <MapPage setLocation={setLocation} />
+        <Map setLocation={setLocation} />
       </div>
       <div className="updates-wrapper">
         <ReportsPage location={location} />

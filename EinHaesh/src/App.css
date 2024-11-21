@@ -2,7 +2,7 @@
   display: flex;
   width: 100vw;
   height: 100vh;
-  flex-direction: row-reverse;
+  /* flex-direction: row-reverse; */
 }
 
 .updates-wrapper {

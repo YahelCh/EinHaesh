@@ -1,116 +1,149 @@
-/* ReportPage CSS */
+/* מבנה כללי */
 .report-page {
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   background-color: #1a1a1a;
   color: white;
-  height: 100%;
+  /* overflow: hidden; */
+  position: sticky;
+  width: 100%;
+  max-width: 100%;
+}
+
+.reports-list {
+  flex: 1;
+  /* overflow-y: auto; */
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
 }
 
-/* עיצוב textarea */
+
+.reports-title {
+  background-color: #363636; 
+  color: white; 
+  text-align: right; 
+  padding: 10px 15px; 
+  font-size: 18px; 
+  font-weight: bold; 
+  direction: rtl; 
+  border-bottom: 2px solid #363636;
+  position: sticky; 
+  top: 0;
+  z-index: 10; 
+}
+
+.chat-bubble {
+  background-color: #2c2c2c;
+  color: white;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 15px;
+  max-width: 70%;
+  align-self: flex-start;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  word-break: break-word;
+  width: auto;
+  border-color: red;
+  border-style: groove;
+  border-width: 2px;
+}
+
+/* עיצוב לטקסט רגיל */
+.chat-bubble:not(.transcription) {
+  border-color: green; /* ירוק עבור טקסט רגיל */
+}
+
+/* עיצוב לתמלול */
+.chat-bubble.transcription {
+  border-color: red; /* אדום עבור תמלול */
+}
+
+.chat-bubble p {
+  margin: 0;
+}
+
+/* עיצוב שורת הקלט בתחתית */
+.input-bar {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #363636;
+  border-top: 1px solid #363636;
+  justify-content: flex-start;
+  direction: rtl;
+}
+
 textarea {
-  width: 100%;
-  height: 150px;
-  margin-bottom: 10px;
+  flex: 1;
+  /* height: 40px; */
+  min-height: 40px;  /* גובה מינימלי */
+  max-height: 120px;  /* הגבלת גובה מרבי */
   padding: 10px;
   border: 1px solid #ccc;
+  border-radius: 15px;
   background-color: #333;
   color: white;
-  resize: none; /* מבטל את אפשרות הגודל החופשי */
+  resize: none;
+  margin-left: 10px;
+  overflow-y: auto;  /* הופך את הtextarea לגלילה כשהתוכן גדול מדי */
+  width: 100%;  /* וודא שהרוחב תופס את כל מקום הזמין */
 }
 
-/* עיצוב כפתורים */
+
+
+textarea::placeholder {
+  color: #aaa;
+}
+
 button {
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
+  width: 40px;
+  height: 40px;
   border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-/* הצגת הדיווחים */
-.reports-list {
-  margin-top: 20px;
-}
-
-.reports-list div {
-  background-color: #2c2c2c;
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-.reports-list div p {
-  margin: 5px 0;
-}
-
-/* מבנה ה-flexbox של המסך */
-.main {
-  display: flex;
-  width: 100vw;
-  height: 100vh;
-  flex-direction: row; /* סדר רכיבים מצד לצד */
-}
-
-.map-wrapper {
-  color: white;
-  flex: 3;
-  position: relative;
-  /* כאן יוצג המפה */
-}
-
-.updates-wrapper {
-  background-color: black;
-  flex: 1;
-  color: white;
-  position: relative;
-  order: 1; /* מציב את ה-div בצד ימין */
-  padding: 20px;
-  overflow-y: auto; /* לאפשר גלילה אם יש יותר מדי תוכן */
-}
-
-/* העיצוב של הסרגל */
-.actions-bar {
-  width: 100%;
-  height: 55px;
-  display: flex;
-  border-radius: 0 0 5% 5%;
-  background-color: #363636;
-  justify-content: center;
-  position: absolute;
-  top: 0;
-  z-index: 1;
-}
-
-/* עיצוב כל אייקון בסרגל */
-.action .icon {
-  width: 25px;
-  height: 25px;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.action {
-  width: 50px;
-  height: 50px;
-  border-radius: 30%;
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 5px; /* קצת ריווח בין האייקונים */
+  cursor: pointer;
 }
 
-/* עיצוב בתגובה לפעולות על אייקונים */
-.action:hover,
-.action:focus {
-  background-color: #6d6e6e;
+.send-button {
+  background-color: #4caf50;
+  color: white;
+  transform: rotate(180deg); 
+  align-items: center;
 }
 
-.action:active {
-  background-color: #6d6e6e;
+button:hover {
+  opacity: 0.8;
 }
+
+.record-button {
+  background-color: #f44336; /* צבע אדום במצב רגיל */
+  color: white;
+  margin-left: 10px;
+  transition: background-color 0.3s;
+  border: none;
+  /* width: 50px; */
+  /* height: 50px; */
+  border-radius: 50%;
+  /* font-size: 20px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.record-button.active {
+  background-color: #4caf50; /* צבע ירוק כשהכפתור פעיל */
+  color: white;
+}
+
+.reports-list audio {
+  margin: 10px 0;
+  width: 100%;
+}
+
