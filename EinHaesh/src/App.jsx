@@ -12,8 +12,8 @@ function App() {
   return (
     <>
       <div className='main'>
-       <div className='updates-wrapper'>דיווחים ועדכונים</div>
-       <div className='map-wrapper'><Map></Map></div>
+        <div className='updates-wrapper'>דיווחים ועדכונים</div>
+        <div className='map-wrapper'><Map></Map></div>
       </div>
     </>
   )

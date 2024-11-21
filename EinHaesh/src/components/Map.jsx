@@ -1,39 +1,125 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import React from 'react';
 import { MapContainer, TileLayer, ImageOverlay, Marker, FeatureGroup, Popup, Polyline, Polygon, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import basePlan from '../assets/map.jpg';
+import basePlan from '../assets/Hospital_Floor_Plan_700x700.png';
 import { EditControl } from 'react-leaflet-draw';
 import ActionsBar from './ActionsBar';
 import iconDivuach from '../assets/speech-bubble.png'
+import MapLegend from './MapLegend'
+import MyLocation from './MyLocation';
 
 
-const bounds = [[0, 0], [337, 211]]; // גבולות התמונה ביחידות מותאמות
+const bounds = [[0, 0], [700, 700]]; // גבולות התמונה ביחידות מותאמות
 
 const Map = () => {
   const [activeAction, setActiveAction] = useState();
   const [markers, setMarkers] = useState([]);
-  const [smokeZone, setSmokeZone] = useState([]);
+  const [displayWay, setDisplayWay] = useState(false);
+
   //   const path = [
   //     markers[0].position, // מיקום נקודה 1
   //     markers[1].position, // מיקום נקודה 2
   //     markers[2].position, // מיקום נקודה 3
   //   ];
 
-  const defaultIcon = new L.Icon({
-    iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png', // אייקון דיפולטיבי של Leaflet
-    iconSize: [25, 41], // גודל האייקון
-    iconAnchor: [12, 41], // איפה לארח את ה-Anchor של האייקון
-    popupAnchor: [0, -41], // הגדרת מיקום ה-popup יחסית לאייקון
-  });
+  const smokeZone = [
+    [173, 42],
+    [173, 70],
+    [113, 70],
 
+    [113, 42]
+
+  ];
+
+  const [zones, setZones] = useState([{
+    desc: 'כניסה',
+    id: 0,
+    coords: [
+      [653.3333435058594, 339.33331298828125],
+      [589.3333435058594, 339.33331298828125],
+      [581.3333435058594, 285.33331298828125],
+      [431.3333435058594, 282.33331298828125],
+      [433.3333435058594, 434.33331298828125],
+      [586.3333435058594, 437.33331298828125],
+      [589.3333435058594, 385.33331298828125],
+      [651.3333435058594, 384.33331298828125],
+    ],
+  },
+  // {
+  //   desc: 'מכבסה',
+  //   id: 1,
+  //   coords: [
+  //     [51.505, -0.09],
+  //     [51.51, -0.1],
+  //     [51.51, -0.08],
+  //   ],
+  // },
+  {
+    desc: 'בית כנסת',
+    id: 1,
+    coords: [
+      [586, 497],
+      [429, 492],
+      [424, 634],
+      [588, 637],
+    ],
+  },
+  {
+    desc: 'מטבח',
+    id: 2,
+    coords: [
+      [51.505, -0.09],
+      [51.51, -0.1],
+      [51.51, -0.08],
+    ],
+  },
+  {
+    desc: 'תא 1',
+    id: 3,
+    coords: [
+      [51.505, -0.09],
+      [51.51, -0.1],
+      [51.51, -0.08],
+    ],
+  },
+  {
+    desc: 'תא 2',
+    id: 4,
+    coords: [
+      [51.505, -0.09],
+      [51.51, -0.1],
+      [51.51, -0.08],
+    ],
+  },
+  {
+    desc: 'תא 3',
+    id: 5,
+    coords: [
+      [51.505, -0.09],
+      [51.51, -0.1],
+      [51.51, -0.08],
+    ],
+  },
+
+  {
+    id: 6,
+    coords: [
+      [51.49, -0.1],
+      [51.5, -0.12],
+      [51.5, -0.09],
+    ],
+  },
+  ]);
 
   const MapClickHandler = () => {
     const map = useMapEvents({
       click(event) {
-        if (activeAction && activeAction.icon) { // בדוק אם יש אייקון פעיל
+        if (activeAction && activeAction.icon && !(['fire', 'smoke'].includes(activeAction.name))) { // בדוק אם יש אייקון פעיל
           const newMarker = event.latlng; // מיקום הלחיצה
+          console.log(event.latlng);
+
           const icon = L.icon({
             iconUrl: activeAction.icon, // השתמש באייקון שהמשתמש בחר
             iconSize: [32, 32], // גודל האייקון
@@ -41,35 +127,46 @@ const Map = () => {
             popupAnchor: [0, -32], // מיקום הפופאפ ביחס לאייקון
           });
           setMarkers((prevMarkers) => [...prevMarkers, { position: newMarker, icon }]);
-          if (activeAction?.id == 1) {
-            setSmokeZone([markers?.[0].position, newMarker])
-          }
+
         }
       }
     });
   };
 
-  useEffect(() => {
-    // מבצע קריאה למיקום הנוכחי של המשתמש
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          // עדכון המיקום הנוכחי
-          const { latitude, longitude } = position.coords;
-          setMarkers((prevMarkers) => [...prevMarkers, { position: [latitude, longitude], popup: "המיקום שלי" }]);
-        },
-        (error) => {
-          console.error("Error getting geolocation: ", error);
-        }
-      );
+  const handleZoneClick = (zoneIndex) => {
+    if (activeAction.name == 'fire') {
+      setZones(prev => {
+        let temp = [...prev];
+        temp[zoneIndex].color = 'rgba(255, 0, 0, 0.5)';
+        return temp;
+      })
+      setDisplayWay(true)
     }
-  }, []);
+    if (activeAction.name == 'smoke') {
+      setZones(prev => {
+        let temp = [...prev];
+        temp[zoneIndex].color = '#333333';
+        return temp;
+      })
+      setDisplayWay(true)
+    }
+
+  }
+  const blockedPoints = [
+    { id: 1, lat: 398, lng: 148.1135902636917, description: 'נקודה חסומה 1' },
+    { id: 2, lat: 395, lng: 357.2549019607843, description: 'נקודה חסומה 2' },
+    { id: 3, lat: -1, lng: 363.2589587559162, description: 'נקודה חסומה 3' },
+  ];
+
+  // יצירת רשימה של מיקומים לכל נקודה חסומה (נקודות קו)
+  const positions = blockedPoints.map(point => [point.lat, point.lng]);
+
   return (
     <>
       <ActionsBar setActiveAction={setActiveAction} />
       <MapContainer
-        center={[152, 105]} // נקודת ההתחלה של התצוגה
-        zoom={1} // שליטה ברמת הזום
+        center={[350, 350]} // נקודת ההתחלה של התצוגה
+        zoom={-1} // שליטה ברמת הזום
         style={{ height: "100vh", width: "100%" }}
         crs={L.CRS.Simple} // משתמשים בקואורדינטות פשוטות ולא גיאוגרפיות
       >
@@ -78,20 +175,60 @@ const Map = () => {
           bounds={bounds}
         />
         {markers.map((marker, index) => (
-          <Marker key={index} position={marker.position} icon={marker.icon || defaultIcon} >
-            {marker.popup && <Popup>{marker.popup}</Popup>}
+          <Marker key={index} {...marker}>
+            <Popup>{marker.popup}</Popup>
           </Marker>
         ))}
 
-        {/* <Polyline positions={path} color="blue" /> */}
+        {zones.map((zone, index) => <Polygon
+          key={zone.id}
+          positions={zone.coords}
+          fillColor={zone.color}
+          pathOptions={{
+
+            color: zone.color || 'transparent',
+            fillOpacity: zone.color ? 0.5 : 0,
+            weight: 1, // עובי הגבול
+          }}
+          eventHandlers={{
+            click: () => handleZoneClick(index),
+          }}
+        />)}
+
+        {/* <Polyline positions={path} color="blue" />
         <Polygon
-          positions={smokeZone} // קואורדינטות הפוליגון
+          positions={zones[1].coords} // קואורדינטות הפוליגון
           color="red" // צבע הגבול
           fillColor="rgba(255, 0, 0, 0.5)" // צבע המילוי עם שקיפות
           weight={2} // רוחב הגבול
         />
+
+        <Polygon
+          positions={zones[0].coords} // קואורדינטות הפוליגון
+          color="red" // צבע הגבול
+          fillColor="rgba(255, 0, 0, 0.5)" // צבע המילוי עם שקיפות
+          weight={2} // רוחב הגבול
+        /> */}
+
+        {displayWay &&
+          <>
+            {/* הצגת כל הנקודות בריחה */}
+            {blockedPoints.map((point) => (
+              <Marker
+                key={point.id}
+                position={[point.lat, point.lng]}
+              >
+                <Popup>{point.description}</Popup>
+              </Marker>
+            ))}
+            {/* הצגת דרך (מסלול) על המפה */}
+
+            < Polyline positions={positions} color="blue" weight={5} opacity={0.7} />
+          </>}
+        <MyLocation />
         <MapClickHandler />
       </MapContainer>
+      {/* <MapLegend/> */}
     </>
   );
 };
