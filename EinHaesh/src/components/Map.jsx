@@ -1,16 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
 import React from 'react';
-import { MapContainer, TileLayer, ImageOverlay, Marker, FeatureGroup, Popup, Polyline, Polygon, useMapEvents } from 'react-leaflet';
+import { MapContainer, ImageOverlay, Marker, Polygon, useMapEvents, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import basePlan from '../assets/map1.png';
 import { EditControl } from 'react-leaflet-draw';
 import ActionsBar from './ActionsBar';
-import iconDivuach from '../assets/speech-bubble.png'
 import MapLegend from './MapLegend'
+import fireIconImg from '../assets/fire-icon.svg';
 
 
-const bounds = [[0, 0], [445, 424]]; // גבולות התמונה ביחידות מותאמות
+const bounds = [[0, 0], [700, 700]]; // גבולות התמונה ביחידות מותאמות
 
 const Map = () => {
   const [activeAction, setActiveAction] = useState({});
@@ -62,13 +62,17 @@ const Map = () => {
     return [lat, lng];
   };
 
-  useEffect(() => {
-    const bla = L.divIcon({
-      className: 'custom-div-icon',
-      html: `<div class="point" style="background-color:red"></div>`,
+const fireIcon = L.divIcon({
+      className: 'fire-icon',
+      html: `
+          <img src="${fireIconImg}" alt="Fire Icon" width="50" height="50" />
+        `,
       iconSize: [20, 20], // גודל האייקון
       iconAnchor: [10, 10] // המרכז של האייקון
     })
+
+  useEffect(() => {
+    
 
     const newMarkers = [];
     for (let i = 0; i < 20; i++) {  // יצירת 5 נקודות אקראיות
@@ -178,23 +182,22 @@ const Map = () => {
           console.log(event.latlng);
 
           const icon = L.icon({
-            iconUrl: activeAction.icon, // השתמש באייקון שהמשתמש בחר
+            iconUrl: activeAction.icon, // השתמש באייקון שנבחר
             iconSize: [32, 32], // גודל האייקון
-            iconAnchor: [16, 32], // עוגן האייקון (המיקום שבו יושבת ה"ראש" של האייקון)
+            iconAnchor: [16, 32], // עוגן האייקון
             popupAnchor: [0, -32], // מיקום הפופאפ ביחס לאייקון
           });
           setMarkers((prevMarkers) => [...prevMarkers, { position: newMarker, icon }]);
-
         }
       }
     });
   };
 
   const handleZoneClick = (zoneIndex) => {
-    if (activeAction.name == 'fire') {
+    if (activeAction.name === 'fire') {
       setZones(prev => {
         let temp = [...prev];
-        temp[zoneIndex].color = 'rgba(255, 0, 0, 0.5)';
+        temp[zoneIndex].color = 'rgba(255, 0, 0, 0.5)'; // צבע אדום עם שקיפות עבור אש
         return temp;
       })
     }
@@ -205,17 +208,16 @@ const Map = () => {
         return temp;
       })
     }
-
-  }
+  };
 
   return (
     <>
       <ActionsBar setActiveAction={setActiveAction} />
 
       <MapContainer
-        center={[200, 200]} // נקודת ההתחלה של התצוגה
+        center={[350, 350]} // נקודת ההתחלה של התצוגה
         zoom={-1} // שליטה ברמת הזום
-        style={{ height: "100%", width: "100%", borderRadius: '10px' }}
+        style={{marginTop:'10%', height: "90%", width: "100%", borderRadius: '10px' }}
         crs={L.CRS.Simple} // משתמשים בקואורדינטות פשוטות ולא גיאוגרפיות
       >
         <ImageOverlay
@@ -234,6 +236,8 @@ const Map = () => {
           </Marker>
         ))}
 
+        <Marker icon={fireIcon} position={[652,110]}/>
+
         {zones.map((zone, index) => <Polygon
           key={zone.id}
           positions={zone.coords}
@@ -244,25 +248,10 @@ const Map = () => {
             fillOpacity: zone.color ? 0.5 : 0,
             weight: 1, // עובי הגבול
           }}
-        // eventHandlers={{
-        //   click: () => handleZoneClick(index),
-        // }}
+    
         />)}
 
-        {/* <Polyline positions={path} color="blue" />
-        <Polygon
-          positions={zones[1].coords} // קואורדינטות הפוליגון
-          color="red" // צבע הגבול
-          fillColor="rgba(255, 0, 0, 0.5)" // צבע המילוי עם שקיפות
-          weight={2} // רוחב הגבול
-        />
-
-        <Polygon
-          positions={zones[0].coords} // קואורדינטות הפוליגון
-          color="red" // צבע הגבול
-          fillColor="rgba(255, 0, 0, 0.5)" // צבע המילוי עם שקיפות
-          weight={2} // רוחב הגבול
-        /> */}
+    
 
         <MapClickHandler />
       </MapContainer>
@@ -272,6 +261,3 @@ const Map = () => {
 };
 
 export default Map;
-
-
-
