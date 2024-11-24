@@ -9,6 +9,7 @@ import ActionsBar from './ActionsBar';
 import MapLegend from './MapLegend'
 import fireIconImg from '../assets/fire-icon.svg';
 import MyLocation from './MyLocation';
+import SoherMap from './SoherMap';
 
 
 const bounds = [[0, 0], [700, 700]]; // גבולות התמונה ביחידות מותאמות
@@ -22,7 +23,7 @@ const Map = ({ setReports, isWaringPopup }) => {
   //     markers[1].position, // מיקום נקודה 2
   //     markers[2].position, // מיקום נקודה 3
   //   ];
-  const [alertPosition, setAlertPosition] = useState(null);
+  const [alertPosition, setAlertPosition] = useState(false);
 
   const smokeZone = [
     [173, 42],
@@ -194,6 +195,7 @@ const Map = ({ setReports, isWaringPopup }) => {
             { id: Date.now(), text: activeAction.reportText, isRecording: false },
           ]);
           setMarkers((prevMarkers) => [...prevMarkers, { position: newMarker, icon }]);
+          setAlertPosition(true)
         }
       }
     });
@@ -259,6 +261,7 @@ const Map = ({ setReports, isWaringPopup }) => {
 
 
         {!isWaringPopup && <MyLocation />}
+        {alertPosition && <SoherMap />}
         <MapClickHandler />
       </MapContainer>
       <MapLegend />
