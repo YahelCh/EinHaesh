@@ -23,8 +23,8 @@ const ActionsBar = ({ setActiveAction, activeAction }) => {
     ];
 
     return <div className='actions-bar'>
-        {actions.map(action => <div className='action' onClick={() => setActiveAction(action)}>
-            <img className='action-icon' src={activeAction.name == action.name ? action.activeIcon : action.icon} alt="speech-bubble" /></div>)}
+        {actions.map((action,index) => <div key={index} className='action' onClick={() => setActiveAction(action)}>
+            <img  className='action-icon' src={activeAction.name == action.name ? action.activeIcon : action.icon} alt="speech-bubble" /></div>)}
 {/* 
 
         <div className='action' onClick={() => setActiveAction({ name: 'shalter', icon: iconShalterActive })}>

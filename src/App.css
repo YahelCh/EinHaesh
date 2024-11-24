@@ -19,7 +19,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url('./assets/Warning\ pop-up.png');
+  /* background-image: url('./assets/Warning\ pop-up.png'); */
 }
 
 .map-wrapper {

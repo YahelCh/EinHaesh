@@ -15,7 +15,7 @@ const MapLegend = ({ setActiveAction }) => {
 
 
     return <div className='map-legend'>
-        {signs.map(sign => <div style={{
+        {signs.map((sign,index) => <div key={index} style={{
             display: 'flex', gap: '7px',
             alignItems: 'center'
         }}>

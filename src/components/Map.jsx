@@ -8,11 +8,12 @@ import { EditControl } from 'react-leaflet-draw';
 import ActionsBar from './ActionsBar';
 import MapLegend from './MapLegend'
 import fireIconImg from '../assets/fire-icon.svg';
+import MyLocation from './MyLocation';
 
 
 const bounds = [[0, 0], [700, 700]]; // גבולות התמונה ביחידות מותאמות
 
-const Map = ({ setReports }) => {
+const Map = ({ setReports, isWaringPopup }) => {
   const [activeAction, setActiveAction] = useState({});
   const [markers, setMarkers] = useState([]);
 
@@ -21,6 +22,7 @@ const Map = ({ setReports }) => {
   //     markers[1].position, // מיקום נקודה 2
   //     markers[2].position, // מיקום נקודה 3
   //   ];
+  const [alertPosition, setAlertPosition] = useState(null);
 
   const smokeZone = [
     [173, 42],
@@ -256,7 +258,7 @@ const Map = ({ setReports }) => {
         />)}
 
 
-
+        {!isWaringPopup && <MyLocation />}
         <MapClickHandler />
       </MapContainer>
       <MapLegend />

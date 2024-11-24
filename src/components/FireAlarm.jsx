@@ -16,18 +16,7 @@ const FireAlarm = () => {
   };
 
   useEffect(() => {
-    // מציג הודעה למשתמש או פעולה עם אינטראקציה
-    window.addEventListener('click', handleUserInteraction);
-    window.addEventListener('scroll', handleUserInteraction);
-
-    return () => {
-      window.removeEventListener('click', handleUserInteraction);
-      window.removeEventListener('scroll', handleUserInteraction);
-      const audio = audioRef.current;
-      if (audio) {
-        audio.pause();
-      }
-    };
+    handleUserInteraction()
   }, []);
 
   return (
