@@ -44,7 +44,7 @@ const MyLocation = () => {
             }
 
             element = newPositions1[newPositions1.length - 1]
-            for (let index = 0; index < 120; index++) {
+            for (let index = 0; index < 110; index++) {
                 const newLongitude = element[1] + (index * (-2));  // הוספת 2 לכל תיאום רוחב
                 newPositions1.push([element[0], newLongitude]);
             }
