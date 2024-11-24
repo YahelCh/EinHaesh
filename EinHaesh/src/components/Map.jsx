@@ -217,7 +217,7 @@ const Map = () => {
 
   return (
     <>
-      <ActionsBar setActiveAction={setActiveAction} />
+      <ActionsBar activeAction={activeAction} setActiveAction={setActiveAction} />
 
       <MapContainer
         center={[200, 200]} // נקודת ההתחלה של התצוגה
