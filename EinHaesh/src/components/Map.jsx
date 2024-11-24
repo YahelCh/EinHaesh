@@ -1,17 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import React from 'react';
-import { MapContainer, TileLayer, ImageOverlay, Marker, FeatureGroup, Popup, Polyline, Polygon, useMapEvents } from 'react-leaflet';
+import { MapContainer, ImageOverlay, Marker, Polygon, useMapEvents, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import basePlan from '../assets/map1.png';
 import { EditControl } from 'react-leaflet-draw';
 import ActionsBar from './ActionsBar';
-import iconDivuach from '../assets/speech-bubble.png'
 import MapLegend from './MapLegend'
 import MyLocation from './MyLocation';
+import fireIconImg from '../assets/fire-icon.svg';
 
 
-const bounds = [[0, 0], [445, 424]]; // גבולות התמונה ביחידות מותאמות
+const bounds = [[0, 0], [700, 700]]; // גבולות התמונה ביחידות מותאמות
 
 const Map = () => {
   const [activeAction, setActiveAction] = useState({});
@@ -64,13 +64,17 @@ const Map = () => {
     return [lat, lng];
   };
 
+  const fireIcon = L.divIcon({
+    className: 'fire-icon',
+    html: `
+          <img src="${fireIconImg}" alt="Fire Icon" width="50" height="50" />
+        `,
+    iconSize: [20, 20], // גודל האייקון
+    iconAnchor: [10, 10] // המרכז של האייקון
+  })
+
   useEffect(() => {
-    const bla = L.divIcon({
-      className: 'custom-div-icon',
-      html: `<div class="point" style="background-color:red"></div>`,
-      iconSize: [20, 20], // גודל האייקון
-      iconAnchor: [10, 10] // המרכז של האייקון
-    })
+
 
     const newMarkers = [];
     for (let i = 0; i < 20; i++) {  // יצירת 5 נקודות אקראיות
@@ -180,23 +184,22 @@ const Map = () => {
           console.log(event.latlng);
 
           const icon = L.icon({
-            iconUrl: activeAction.icon, // השתמש באייקון שהמשתמש בחר
+            iconUrl: activeAction.icon, // השתמש באייקון שנבחר
             iconSize: [32, 32], // גודל האייקון
-            iconAnchor: [16, 32], // עוגן האייקון (המיקום שבו יושבת ה"ראש" של האייקון)
+            iconAnchor: [16, 32], // עוגן האייקון
             popupAnchor: [0, -32], // מיקום הפופאפ ביחס לאייקון
           });
           setMarkers((prevMarkers) => [...prevMarkers, { position: newMarker, icon }]);
-
         }
       }
     });
   };
 
   const handleZoneClick = (zoneIndex) => {
-    if (activeAction.name == 'fire') {
+    if (activeAction.name === 'fire') {
       setZones(prev => {
         let temp = [...prev];
-        temp[zoneIndex].color = 'rgba(255, 0, 0, 0.5)';
+        temp[zoneIndex].color = 'rgba(255, 0, 0, 0.5)'; // צבע אדום עם שקיפות עבור אש
         return temp;
       })
       setDisplayWay(true)
@@ -209,87 +212,56 @@ const Map = () => {
       })
       setDisplayWay(true)
     }
-
-  }
-  const blockedPoints = [
-    { id: 1, lat: 398, lng: 148.1135902636917, description: 'נקודה חסומה 1' },
-    { id: 2, lat: 395, lng: 357.2549019607843, description: 'נקודה חסומה 2' },
-    { id: 3, lat: -1, lng: 363.2589587559162, description: 'נקודה חסומה 3' },
-  ];
-
-  // יצירת רשימה של מיקומים לכל נקודה חסומה (נקודות קו)
-  const positions = blockedPoints.map(point => [point.lat, point.lng]);
+  };
 
 
+  return (
+    <>
+      <ActionsBar setActiveAction={setActiveAction} />
 
-
-
-return (
-  <>
-    <ActionsBar setActiveAction={setActiveAction} />
-
-    <MapContainer
-      center={[200, 200]} // נקודת ההתחלה של התצוגה
-      zoom={-1} // שליטה ברמת הזום
-      style={{ height: "100%", width: "100%", borderRadius: '10px' }}
-      crs={L.CRS.Simple} // משתמשים בקואורדינטות פשוטות ולא גיאוגרפיות
-    >
-      <ImageOverlay
-        url={basePlan} // הנתיב לתמונה
-        bounds={bounds}
-      />
-      {markers.map((marker, index) => (
-        <Marker key={index} {...marker}>
-          <Popup>{marker.popup}</Popup>
-        </Marker>
-      ))}
-
-      {signsOnMap.map((sign, index) => (
-        <Marker key={index} {...sign}>
-
-        </Marker>
-      ))}
-
-      {
-        zones.map((zone, index) => <Polygon
-          key={zone.id}
-          positions={zone.coords}
-          fillColor={zone.color}
-          pathOptions={{
-
-            color: zone.color || 'transparent',
-            fillOpacity: zone.color ? 0.5 : 0,
-            weight: 1, // עובי הגבול
-          }}
-        // eventHandlers={{
-        //   click: () => handleZoneClick(index),
-        // }}
-        />)
-      }
-
-      {/* <Polyline positions={path} color="blue" />
-        <Polygon
-          positions={zones[1].coords} // קואורדינטות הפוליגון
-          color="red" // צבע הגבול
-          fillColor="rgba(255, 0, 0, 0.5)" // צבע המילוי עם שקיפות
-          weight={2} // רוחב הגבול
+      <MapContainer
+        center={[200, 200]} // נקודת ההתחלה של התצוגה
+        zoom={-1} // שליטה ברמת הזום
+        style={{ height: "100%", width: "100%", borderRadius: '10px' }}
+        crs={L.CRS.Simple} // משתמשים בקואורדינטות פשוטות ולא גיאוגרפיות
+      >
+        <ImageOverlay
+          url={basePlan} // הנתיב לתמונה
+          bounds={bounds}
         />
+        {markers.map((marker, index) => (
+          <Marker key={index} {...marker}>
+            <Popup>{marker.popup}</Popup>
+          </Marker>
+        ))}
 
-        <Polygon
-          positions={zones[0].coords} // קואורדינטות הפוליגון
-          color="red" // צבע הגבול
-          fillColor="rgba(255, 0, 0, 0.5)" // צבע המילוי עם שקיפות
-          weight={2} // רוחב הגבול
-        /> */}
+        {signsOnMap.map((sign, index) => (
+          <Marker key={index} {...sign}>
 
-      <MapClickHandler />
-    </MapContainer >
-    <MapLegend />
-  </>
-);
+          </Marker>
+        ))}
+
+        {
+          zones.map((zone, index) => <Polygon
+            key={zone.id}
+            positions={zone.coords}
+            fillColor={zone.color}
+            pathOptions={{
+
+              color: zone.color || 'transparent',
+              fillOpacity: zone.color ? 0.5 : 0,
+              weight: 1, // עובי הגבול
+            }}
+
+          />)}
+
+
+
+        <MapClickHandler />
+      </MapContainer >
+      <MapLegend />
+    </>
+  );
 };
 
 export default Map;
-
-
-
