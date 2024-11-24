@@ -1,4 +1,4 @@
-/* מבנה כללי */
+
 .report-page {
   display: flex;
   flex-direction: column;
@@ -52,21 +52,20 @@
   border-width: 2px;
 }
 
-/* עיצוב לטקסט רגיל */
 .chat-bubble:not(.transcription) {
-  border-color: green; /* ירוק עבור טקסט רגיל */
+  border-color: green; 
 }
 
-/* עיצוב לתמלול */
+
 .chat-bubble.transcription {
-  border-color: red; /* אדום עבור תמלול */
+  border-color: red; 
 }
 
 .chat-bubble p {
   margin: 0;
 }
 
-/* עיצוב שורת הקלט בתחתית */
+
 .input-bar {
   display: flex;
   align-items: center;
@@ -80,8 +79,8 @@
 textarea {
   flex: 1;
   /* height: 40px; */
-  min-height: 40px;  /* גובה מינימלי */
-  max-height: 120px;  /* הגבלת גובה מרבי */
+  min-height: 40px;  
+  max-height: 120px;  
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 15px;
@@ -89,8 +88,8 @@ textarea {
   color: white;
   resize: none;
   margin-left: 10px;
-  overflow-y: auto;  /* הופך את הtextarea לגלילה כשהתוכן גדול מדי */
-  width: 100%;  /* וודא שהרוחב תופס את כל מקום הזמין */
+  overflow-y: auto;  
+  width: 100%;  
 }
 
 
@@ -122,7 +121,7 @@ button:hover {
 }
 
 .record-button {
-  background-color: #f44336; /* צבע אדום במצב רגיל */
+  background-color: #f44336; 
   color: white;
   margin-left: 10px;
   transition: background-color 0.3s;
@@ -138,7 +137,7 @@ button:hover {
 }
 
 .record-button.active {
-  background-color: #4caf50; /* צבע ירוק כשהכפתור פעיל */
+  background-color: #4caf50; 
   color: white;
 }
 
@@ -146,4 +145,17 @@ button:hover {
   margin: 10px 0;
   width: 100%;
 }
-
+.message-meta {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 5px;
+    font-size: 10px;
+    color: #aaa;
+  }
+  
+  .message-meta .time {
+    margin-right: 5px;
+  }
+  
+  
