@@ -1,9 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import React from 'react';
 import { MapContainer, TileLayer, ImageOverlay, Marker, FeatureGroup, Popup, Polyline, Polygon, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import basePlan from '../assets/Hospital_Floor_Plan_700x700.png';
+import basePlan from '../assets/map1.png';
 import { EditControl } from 'react-leaflet-draw';
 import ActionsBar from './ActionsBar';
 import iconDivuach from '../assets/speech-bubble.png'
@@ -11,10 +11,10 @@ import MapLegend from './MapLegend'
 import MyLocation from './MyLocation';
 
 
-const bounds = [[0, 0], [700, 700]]; // גבולות התמונה ביחידות מותאמות
+const bounds = [[0, 0], [445, 424]]; // גבולות התמונה ביחידות מותאמות
 
 const Map = () => {
-  const [activeAction, setActiveAction] = useState();
+  const [activeAction, setActiveAction] = useState({});
   const [markers, setMarkers] = useState([]);
   const [displayWay, setDisplayWay] = useState(false);
 
@@ -32,6 +32,60 @@ const Map = () => {
     [113, 42]
 
   ];
+
+  const signs = [
+    { text: 'ארון כיבוי', color: 'white' },
+    { text: 'ברז גז', color: 'red' },
+    { text: 'שער', color: 'green' },
+    { text: 'גנרטור', color: 'blue' },
+    { text: 'הידרנט', color: '#36caca' },
+    { text: 'דלת', color: '#c72830' },
+    { text: 'לוח חשמל', color: '#eeba11' },
+  ]
+
+  function createColorfulIcon(color) {
+    return L.divIcon({
+      className: 'custom-div-icon',
+      html: `<div class="point" style="background-color:${color};"></div>`,
+      iconSize: [5, 5], // גודל האייקון
+      iconAnchor: [10, 10] // המרכז של האייקון
+    });
+  }
+  const colors = ['red', 'green', 'blue', '#36caca', '#c72830', '#eeba11'];
+
+  const [signsOnMap, setSignsOnMap] = useState([
+
+  ])
+
+  const generateRandomCoordinates = () => {
+    const lat = Math.floor(Math.random() * (445 - 0 + 1) + 0);
+    // טווח אקראי של קו רוחב
+    const lng = Math.floor(Math.random() * (424 - 0 + 1) + 0);  // טווח אקראי של קו אורך
+    return [lat, lng];
+  };
+
+  useEffect(() => {
+    const bla = L.divIcon({
+      className: 'custom-div-icon',
+      html: `<div class="point" style="background-color:red"></div>`,
+      iconSize: [20, 20], // גודל האייקון
+      iconAnchor: [10, 10] // המרכז של האייקון
+    })
+
+    const newMarkers = [];
+    for (let i = 0; i < 20; i++) {  // יצירת 5 נקודות אקראיות
+      const randomCoords = generateRandomCoordinates();
+      const color = colors[i % colors.length];
+      newMarkers.push({
+        position: randomCoords,
+        icon: createColorfulIcon(color),
+        id: i,
+        popup: `Marker ${i + 1}`,
+      });
+    }
+    setSignsOnMap(newMarkers);
+  }, []);
+
 
   const [zones, setZones] = useState([{
     desc: 'כניסה',
@@ -113,6 +167,11 @@ const Map = () => {
   },
   ]);
 
+  useEffect(() => {
+    console.log(activeAction.name);
+
+  }, [activeAction])
+
   const MapClickHandler = () => {
     const map = useMapEvents({
       click(event) {
@@ -161,26 +220,38 @@ const Map = () => {
   // יצירת רשימה של מיקומים לכל נקודה חסומה (נקודות קו)
   const positions = blockedPoints.map(point => [point.lat, point.lng]);
 
-  return (
-    <>
-      <ActionsBar setActiveAction={setActiveAction} />
-      <MapContainer
-        center={[350, 350]} // נקודת ההתחלה של התצוגה
-        zoom={-1} // שליטה ברמת הזום
-        style={{ height: "100vh", width: "100%" }}
-        crs={L.CRS.Simple} // משתמשים בקואורדינטות פשוטות ולא גיאוגרפיות
-      >
-        <ImageOverlay
-          url={basePlan} // הנתיב לתמונה
-          bounds={bounds}
-        />
-        {markers.map((marker, index) => (
-          <Marker key={index} {...marker}>
-            <Popup>{marker.popup}</Popup>
-          </Marker>
-        ))}
 
-        {zones.map((zone, index) => <Polygon
+
+
+
+return (
+  <>
+    <ActionsBar setActiveAction={setActiveAction} />
+
+    <MapContainer
+      center={[200, 200]} // נקודת ההתחלה של התצוגה
+      zoom={-1} // שליטה ברמת הזום
+      style={{ height: "100%", width: "100%", borderRadius: '10px' }}
+      crs={L.CRS.Simple} // משתמשים בקואורדינטות פשוטות ולא גיאוגרפיות
+    >
+      <ImageOverlay
+        url={basePlan} // הנתיב לתמונה
+        bounds={bounds}
+      />
+      {markers.map((marker, index) => (
+        <Marker key={index} {...marker}>
+          <Popup>{marker.popup}</Popup>
+        </Marker>
+      ))}
+
+      {signsOnMap.map((sign, index) => (
+        <Marker key={index} {...sign}>
+
+        </Marker>
+      ))}
+
+      {
+        zones.map((zone, index) => <Polygon
           key={zone.id}
           positions={zone.coords}
           fillColor={zone.color}
@@ -190,12 +261,13 @@ const Map = () => {
             fillOpacity: zone.color ? 0.5 : 0,
             weight: 1, // עובי הגבול
           }}
-          eventHandlers={{
-            click: () => handleZoneClick(index),
-          }}
-        />)}
+        // eventHandlers={{
+        //   click: () => handleZoneClick(index),
+        // }}
+        />)
+      }
 
-        {/* <Polyline positions={path} color="blue" />
+      {/* <Polyline positions={path} color="blue" />
         <Polygon
           positions={zones[1].coords} // קואורדינטות הפוליגון
           color="red" // צבע הגבול
@@ -210,27 +282,14 @@ const Map = () => {
           weight={2} // רוחב הגבול
         /> */}
 
-        {displayWay &&
-          <>
-            {/* הצגת כל הנקודות בריחה */}
-            {blockedPoints.map((point) => (
-              <Marker
-                key={point.id}
-                position={[point.lat, point.lng]}
-              >
-                <Popup>{point.description}</Popup>
-              </Marker>
-            ))}
-            {/* הצגת דרך (מסלול) על המפה */}
-
-            < Polyline positions={positions} color="blue" weight={5} opacity={0.7} />
-          </>}
-        <MyLocation />
-        <MapClickHandler />
-      </MapContainer>
-      {/* <MapLegend/> */}
-    </>
-  );
+      <MapClickHandler />
+    </MapContainer >
+    <MapLegend />
+  </>
+);
 };
 
 export default Map;
+
+
+
