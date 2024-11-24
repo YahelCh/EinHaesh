@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
 import './ReportsPage.css';
 
-const ReportsPage = ({ location }) => {
+const ReportsPage = ({ reports, setReports }) => {
   const [currentReport, setCurrentReport] = useState('');
-  const [reports, setReports] = useState([]);
+  // const [reports, setReports] = useState([]);
   const [recording, setRecording] = useState(false);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);

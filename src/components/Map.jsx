@@ -12,7 +12,7 @@ import fireIconImg from '../assets/fire-icon.svg';
 
 const bounds = [[0, 0], [700, 700]]; // גבולות התמונה ביחידות מותאמות
 
-const Map = () => {
+const Map = ({ setReports }) => {
   const [activeAction, setActiveAction] = useState({});
   const [markers, setMarkers] = useState([]);
 
@@ -62,17 +62,17 @@ const Map = () => {
     return [lat, lng];
   };
 
-const fireIcon = L.divIcon({
-      className: 'fire-icon',
-      html: `
+  const fireIcon = L.divIcon({
+    className: 'fire-icon',
+    html: `
           <img src="${fireIconImg}" alt="Fire Icon" width="50" height="50" />
         `,
-      iconSize: [20, 20], // גודל האייקון
-      iconAnchor: [10, 10] // המרכז של האייקון
-    })
+    iconSize: [20, 20], // גודל האייקון
+    iconAnchor: [10, 10] // המרכז של האייקון
+  })
 
   useEffect(() => {
-    
+
 
     const newMarkers = [];
     for (let i = 0; i < 20; i++) {  // יצירת 5 נקודות אקראיות
@@ -169,24 +169,28 @@ const fireIcon = L.divIcon({
   },
   ]);
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(activeAction.name);
-    
-  },[activeAction])
+
+  }, [activeAction])
 
   const MapClickHandler = () => {
     const map = useMapEvents({
       click(event) {
-        if (activeAction && activeAction.icon) { // בדוק אם יש אייקון פעיל
+        if (activeAction && activeAction.activeIcon) { // בדוק אם יש אייקון פעיל
           const newMarker = event.latlng; // מיקום הלחיצה
           console.log(event.latlng);
 
           const icon = L.icon({
-            iconUrl: activeAction.icon, // השתמש באייקון שנבחר
+            iconUrl: activeAction.activeIcon, // השתמש באייקון שנבחר
             iconSize: [32, 32], // גודל האייקון
             iconAnchor: [16, 32], // עוגן האייקון
             popupAnchor: [0, -32], // מיקום הפופאפ ביחס לאייקון
           });
+          setReports((prevReports) => [
+            ...prevReports,
+            { id: Date.now(), text: activeAction.reportText, isRecording: false },
+          ]);
           setMarkers((prevMarkers) => [...prevMarkers, { position: newMarker, icon }]);
         }
       }
@@ -217,7 +221,7 @@ const fireIcon = L.divIcon({
       <MapContainer
         center={[350, 350]} // נקודת ההתחלה של התצוגה
         zoom={-1} // שליטה ברמת הזום
-        style={{marginTop:'10%', height: "90%", width: "100%", borderRadius: '10px' }}
+        style={{ marginTop: '10%', height: "90%", width: "100%", borderRadius: '10px' }}
         crs={L.CRS.Simple} // משתמשים בקואורדינטות פשוטות ולא גיאוגרפיות
       >
         <ImageOverlay
@@ -236,7 +240,7 @@ const fireIcon = L.divIcon({
           </Marker>
         ))}
 
-        <Marker icon={fireIcon} position={[652,110]}/>
+        <Marker icon={fireIcon} position={[652, 110]} />
 
         {zones.map((zone, index) => <Polygon
           key={zone.id}
@@ -248,10 +252,10 @@ const fireIcon = L.divIcon({
             fillOpacity: zone.color ? 0.5 : 0,
             weight: 1, // עובי הגבול
           }}
-    
+
         />)}
 
-    
+
 
         <MapClickHandler />
       </MapContainer>

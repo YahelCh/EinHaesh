@@ -8,6 +8,7 @@ import FireAlarm from './components/FireAlarm'
 function App() {
   const [location, setLocation] = useState(null); // מיקום שנבחר במפה
   const [isWaringOpoup, setIsWaringOpoup] = useState(true); // מיקום שנבחר במפה
+  const [reports, setReports] = useState([]);
 
   return (
     <>
@@ -19,10 +20,10 @@ function App() {
 
         <div className='title'>עין האש</div>
         <div className="updates-wrapper">
-          <ReportsPage location={location} />
+          <ReportsPage reports={reports} setReports={setReports} location={location} />
         </div>
         <div className='center' >
-          <div className='map-wrapper'><Map></Map></div>
+          <div className='map-wrapper'><Map reports={reports} setReports={setReports} ></Map></div>
         </div>
         {isWaringOpoup &&
           <div className="modal">

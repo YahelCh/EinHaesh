@@ -16,14 +16,22 @@ import iconSmokeActive from '../assets/actions_icons/smoke-iconActive.svg'
 
 const ActionsBar = ({ setActiveAction, activeAction }) => {
 
-
+    const actions = [{ name: 'shalter', icon: iconShalter, activeIcon: iconShalterActive, reportText:'הורדת שאלטר מערבי אגף 8' },
+    { name: 'fire', icon: iconFire, activeIcon: iconFireActive,reportText: 'מוקד בעירה נוסף מסדרון'},
+    { name: 'trapped', icon: iconTrapped, activeIcon: iconTrappedActive,reportText:'דיווח על לכודים תא 12' },
+    { name: 'smoke', icon: iconSmoke, activeIcon: iconSmokeActive,reportText:'עשן חדר אוכל ותאים 2,3,4' },
+    ];
 
     return <div className='actions-bar'>
+        {actions.map(action => <div className='action' onClick={() => setActiveAction(action)}>
+            <img className='action-icon' src={activeAction.name == action.name ? action.activeIcon : action.icon} alt="speech-bubble" /></div>)}
+{/* 
+
         <div className='action' onClick={() => setActiveAction({ name: 'shalter', icon: iconShalterActive })}>
             <img className='action-icon' src={activeAction.name == 'shalter' ? iconShalterActive : iconShalter} alt="speech-bubble" /></div>
 
         {/* <div className='action' onClick={() => setActiveAction({ name: 'updtae', icon: iconDivuach })}>
-            <img className='action-icon' src={activeAction.name == 'updtae' ? iconDivuachActive : iconDivuach} alt="speech-bubble" /></div> */}
+            <img className='action-icon' src={activeAction.name == 'updtae' ? iconDivuachActive : iconDivuach} alt="speech-bubble" /></div> 
 
         <div className='action' onClick={() => setActiveAction({ name: 'fire', icon: iconFireActive })}>
             <img className='action-icon' src={activeAction.name == 'fire' ? iconFireActive : iconFire} alt="speech-bubble" /></div>
@@ -33,7 +41,7 @@ const ActionsBar = ({ setActiveAction, activeAction }) => {
 
 
         <div className='action' onClick={() => setActiveAction({ name: 'smoke', icon: iconSmokeActive })}>
-            <img className='action-icon' src={activeAction.name == 'smoke' ? iconSmokeActive : iconSmoke} alt="speech-bubble" /></div>
+            <img className='action-icon' src={activeAction.name == 'smoke' ? iconSmokeActive : iconSmoke} alt="speech-bubble" /></div> */}
 
 
     </div>
