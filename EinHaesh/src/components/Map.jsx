@@ -212,7 +212,7 @@ const fireIcon = L.divIcon({
 
   return (
     <>
-      <ActionsBar setActiveAction={setActiveAction} />
+      <ActionsBar activeAction={activeAction} setActiveAction={setActiveAction} />
 
       <MapContainer
         center={[350, 350]} // נקודת ההתחלה של התצוגה

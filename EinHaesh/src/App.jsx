@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './App.css';
 import Map from './components/Map';
 import ReportsPage from './components/ReportsPage';
-import fireIcon from '/assets/fire-icon.svg';
+import fireIcon from './assets/fire-icon.svg';
 import FireAlarm from './components/FireAlarm'
 
 function App() {

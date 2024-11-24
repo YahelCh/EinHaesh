@@ -97,6 +97,10 @@
   /* Lighter color */
 }
 
+ path {
+  fill: #FFCC00; /* Change the fill color of the path when focused */
+}
+
 /* On active (click) */
 .action:active {
   background-color: #6d6e6e;
