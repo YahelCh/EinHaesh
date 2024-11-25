@@ -2,38 +2,64 @@
   display: flex;
   width: 100vw;
   height: 100vh;
-  /* flex-direction: row-reverse; */
+  flex-direction: row-reverse;
 }
 
 .updates-wrapper {
-  background-color: black;
-  flex: 1;
+  background-color: rgb(46, 44, 44);
+  flex: 1.2;
   color: white;
+  /* background-image: url('./assets/updates.png'); */
+}
+
+.center {
+  /* color: white; */
+  background-color: black;
+  flex: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('./assets/Warning\ pop-up.png');
 }
 
 .map-wrapper {
-  /* background-color: gray; */
-  color: white;
-  flex: 3;
-  position:relative
+  background-color: rgb(255, 255, 255);
+  width: 90%;
+  height: 85%;
+  border-radius: 10px;
+  position: relative;
+
+}
+
+.warning-popup {
+  background-image: url('./assets/Warning pop-up.png');
+  position: absolute;
+  width: 636px;
+  height: 401px;
 }
 
 .actions-bar {
-  width: 100%;
-  height: 55px;
+  /* background: #282A2D; */
+  width: 252px;
+  height: 48px;
   display: flex;
-  border-radius: 0 0 5% 5%;
-  background-color: #363636;
+  border-radius: 16px;
+  background-color: #282A2D;
   justify-content: center;
   position: absolute;
-  top:0;
-  z-index: 1;
+  top: 10px;
+  left: 30%;
+  gap: 10px;
+  z-index: 999;
+  margin-top: 1px;
+  align-items: center;
+
 }
 
-.action .icon {
-  width: 25px;
+.action-icon {
+  width: 20px;
   /* Set the width of the div */
-  height: 25px;
+  height: 20px;
   /* Set the height of the div */
   background-image: url('./assets/speech-bubble.png');
   /* Path to the PNG file */
@@ -42,32 +68,142 @@
   background-position: center;
   /* Center the PNG */
   background-repeat: no-repeat;
+
   /* Prevent tiling */
 }
 
 .action {
-  width: 50px;
-  height: 50px;
-  border-radius: 30%;
+
+  width: 33px;
+  height: 32px;
+  /* padding: 4px 8px 4px 8px; */
+
+  border-radius: 100px;
+  opacity: 0px;
   display: flex;
   justify-content: center;
   align-items: center;
+  border: 1px solid #FFFFFF29;
+  box-shadow: 0px 0px 0px 1px #000000;
+
+
 }
 
 /* On hover or focus */
 .action:hover,
 .action:focus {
-  background-color: #6d6e6e; /* Lighter color */
+  border: 1px solid #FFCC00;
+ fill:#FFCC00;
+  /* Lighter color */
 }
 
 /* On active (click) */
 .action:active {
-  background-color: #6d6e6e; /* Even lighter color */
+  background-color: #6d6e6e;
+  /* Even lighter color */
 }
 
-.map-legend{
-  position: relative;
-  background-color: blanchedalmond;
-  width:200px;
-  height:400px;
+.map-legend {
+  position: absolute;
+  left: 0;
+  bottom: 30px;
+  z-index: 400;
+  font-size: small;
+  color: black;
+  border-radius: 0 10px 10px 0;
+  background-color: rgb(170, 128, 156);
+  width: 100px;
+  height: 170px;
+  direction: rtl;
+  padding-right: 5px;
+  ;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+
+.fire-icon {
+  position: absolute;
+  left: 3px;
+  top: 3px;
+}
+
+.title {
+  position: absolute;
+  left: 60px;
+  top: 20px;
+  width: max-content;
+  color: white;
+}
+
+.fire-icon {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    r: 40;
+    /* רדיוס התחלתי */
+    opacity: 0.6;
+    /* שקיפות גבוהה יותר */
+  }
+
+  50% {
+    r: 50;
+    /* רדיוס מוגדל */
+    opacity: 0.3;
+    /* שקיפות נמוכה יותר */
+  }
+
+  100% {
+    r: 40;
+    /* חזרה לרדיוס התחלתי */
+    opacity: 0.6;
+    /* חזרה לשקיפות התחלתית */
+  }
+}
+
+.leaflet-div-icon {
+  width: 0;
+  height: 0;
+  border: 0;
+  padding: 0;
+}
+
+.custom-div-icon .point {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  /* הופך את ה-div לעיגול */
+
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  /* רקע כהה שקוף */
+  backdrop-filter: blur(8px);
+  /* טשטוש רקע */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  /* מבטיח שהמודל מעל הכל */
+}
+
+/* תוכן המודל */
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
