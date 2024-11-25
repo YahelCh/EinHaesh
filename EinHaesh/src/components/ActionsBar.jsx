@@ -23,6 +23,7 @@ const ActionsBar = ({ setActiveAction }) => {
         <div className='action' onClick={() => setActiveAction({ name: 'fire', icon: iconDivuach })}>
             <div>אש</div>
            </div>
+           
 
     </div>
 }
