@@ -211,3 +211,7 @@
   text-align: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
+
+.rotated-image {
+  transform: rotate(-15deg); /* סיבוב התמונה */
+}

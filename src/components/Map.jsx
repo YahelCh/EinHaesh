@@ -3,18 +3,20 @@ import React from 'react';
 import { MapContainer, ImageOverlay, Marker, Polygon, useMapEvents, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import basePlan from '../assets/map1.png';
+import basePlan from '../assets/mapmap.png';
 import { EditControl } from 'react-leaflet-draw';
 import ActionsBar from './ActionsBar';
 import MapLegend from './MapLegend'
 import fireIconImg from '../assets/fire-icon.svg';
+import parkingOption from '../assets/parking.png'
 
 
 const bounds = [[0, 0], [700, 700]]; // גבולות התמונה ביחידות מותאמות
 
-const Map = ({ setReports }) => {
+const Map = ({ setReports, fireFightingView }) => {
   const [activeAction, setActiveAction] = useState({});
   const [markers, setMarkers] = useState([]);
+
 
   //   const path = [
   //     markers[0].position, // מיקום נקודה 1
@@ -88,84 +90,64 @@ const Map = ({ setReports }) => {
     setSignsOnMap(newMarkers);
   }, []);
 
+  const crossIcon = L.divIcon({
+    className: 'cross-icon',
+    html: `
+      <div style="width: 30px; height: 30px; background-color: transparent; position: relative;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                    color: red; font-size: 20px; font-weight: bold; 
+     background: 
+         linear-gradient(to top left,
+             rgba(0,0,0,0) 0%,
+             rgba(0,0,0,0) calc(50% - 0.8px),
+             rgba(0,0,0,1) 50%,
+             rgba(0,0,0,0) calc(50% + 0.8px),
+             rgba(0,0,0,0) 100%),
+         linear-gradient(to top right,
+             rgba(0,0,0,0) 0%,
+             rgba(0,0,0,0) calc(50% - 0.8px),
+             rgba(0,0,0,1) 50%,
+             rgba(0,0,0,0) calc(50% + 0.8px),
+             rgba(0,0,0,0) 100%);
+">
+         0
+        </div>
+      </div>
+    `,
+    iconSize: [30, 30], // גודל האייקון
+    iconAnchor: [15, 15], // העוגן יהיה במרכז
+  });
+
 
   const [zones, setZones] = useState([{
-    desc: 'כניסה',
-    id: 0,
-    coords: [
-      [653.3333435058594, 339.33331298828125],
-      [589.3333435058594, 339.33331298828125],
-      [581.3333435058594, 285.33331298828125],
-      [431.3333435058594, 282.33331298828125],
-      [433.3333435058594, 434.33331298828125],
-      [586.3333435058594, 437.33331298828125],
-      [589.3333435058594, 385.33331298828125],
-      [651.3333435058594, 384.33331298828125],
-    ],
-  },
-  // {
-  //   desc: 'מכבסה',
-  //   id: 1,
-  //   coords: [
-  //     [51.505, -0.09],
-  //     [51.51, -0.1],
-  //     [51.51, -0.08],
-  //   ],
-  // },
-  {
-    desc: 'בית כנסת',
+    //   desc: 'opt1',
+    //   id: 0,
+    //   coords: [
+    //     [647.3544723142452, 124.94868995633186]
+    //     [647.3544723142452, 55.90889429018705]
+    //   ],
+    // },
+    // {
+    //   desc: 'מכבסה',
+    //   id: 1,
+    //   coords: [
+    //     [51.505, -0.09],
+    //     [51.51, -0.1],
+    //     [51.51, -0.08],
+    //   ],
+    // },
+    // {
+    desc: 'opt2',
     id: 1,
-    coords: [
-      [586, 497],
-      [429, 492],
-      [424, 634],
-      [588, 637],
-    ],
-  },
-  {
-    desc: 'מטבח',
-    id: 2,
-    coords: [
-      [51.505, -0.09],
-      [51.51, -0.1],
-      [51.51, -0.08],
-    ],
-  },
-  {
-    desc: 'תא 1',
-    id: 3,
-    coords: [
-      [51.505, -0.09],
-      [51.51, -0.1],
-      [51.51, -0.08],
-    ],
-  },
-  {
-    desc: 'תא 2',
-    id: 4,
-    coords: [
-      [51.505, -0.09],
-      [51.51, -0.1],
-      [51.51, -0.08],
-    ],
-  },
-  {
-    desc: 'תא 3',
-    id: 5,
-    coords: [
-      [51.505, -0.09],
-      [51.51, -0.1],
-      [51.51, -0.08],
-    ],
-  },
+    coords:
+      [[576.3842877425461, 373.1805429677845],
+      [621.3842877425461, 420.1805429677845],
 
-  {
-    id: 6,
-    coords: [
-      [51.49, -0.1],
-      [51.5, -0.12],
-      [51.5, -0.09],
-    ],
+      [560.3563653573119, 488.12286808931367],
+
+      [517.3833412210128, 441.0917236549394],
+
+      ],
   },
   ]);
 
@@ -234,11 +216,12 @@ const Map = ({ setReports }) => {
           </Marker>
         ))}
 
-        {signsOnMap.map((sign, index) => (
-          <Marker key={index} {...sign}>
+      
+//תמונה של אזור חניה רכב הצלה
+        <Polygon positions={zones[0].coords} color="blue" fillOpacity={0.3} />
 
-          </Marker>
-        ))}
+        {/* הצגת האייקון של איקס אדום בתוך הפוליגון */}
+        <Marker position={[568.88, 430.64]} icon={crossIcon} />
 
         <Marker icon={fireIcon} position={[652, 110]} />
 
@@ -248,7 +231,7 @@ const Map = ({ setReports }) => {
           fillColor={zone.color}
           pathOptions={{
 
-            color: zone.color || 'transparent',
+            color: 'red',
             fillOpacity: zone.color ? 0.5 : 0,
             weight: 1, // עובי הגבול
           }}
@@ -259,7 +242,7 @@ const Map = ({ setReports }) => {
 
         <MapClickHandler />
       </MapContainer>
-      <MapLegend />
+    
     </>
   );
 };
