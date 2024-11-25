@@ -187,9 +187,12 @@ const Map = ({ setReports }) => {
             iconAnchor: [16, 32], // עוגן האייקון
             popupAnchor: [0, -32], // מיקום הפופאפ ביחס לאייקון
           });
+          const timeSent = new Date().toLocaleString('he-IL', {
+            timeStyle: 'short'
+          });
           setReports((prevReports) => [
             ...prevReports,
-            { id: Date.now(), text: activeAction.reportText, isRecording: false },
+            { id: Date.now(), text: activeAction.reportText, isRecording: false , time: timeSent },
           ]);
           setMarkers((prevMarkers) => [...prevMarkers, { position: newMarker, icon }]);
         }

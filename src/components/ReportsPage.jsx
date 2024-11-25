@@ -3,87 +3,77 @@ import './ReportsPage.css';
 
 const ReportsPage = ({ reports, setReports }) => {
   const [currentReport, setCurrentReport] = useState('');
-  // const [reports, setReports] = useState([]);
   const [recording, setRecording] = useState(false);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const recognitionRef = useRef(null);
-  const [currentTranscript, setCurrentTranscript] = useState(''); 
+  const [currentTranscript, setCurrentTranscript] = useState('');
 
-
-  // פונקציה שמתחילה את ההקלטה
   const startRecording = () => {
     setRecording(true);
     audioChunksRef.current = [];
-    setCurrentTranscript(''); 
-  
-    let finalTranscript = ''; 
-  
+    setCurrentTranscript('');
+    let finalTranscript = '';
+
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((stream) => {
         mediaRecorderRef.current = new MediaRecorder(stream);
-  
+
         recognitionRef.current = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         const recognition = recognitionRef.current;
-  
+
         recognition.lang = 'he-IL';
-        recognition.interimResults = true; 
-  
+        recognition.interimResults = true;
+
         recognition.onstart = () => {
           console.log('התחל תמלול');
         };
-  
+
         recognition.onresult = (event) => {
           for (let i = event.resultIndex; i < event.results.length; i++) {
-            if (event.results[i].isFinal) { 
-              finalTranscript += event.results[i][0].transcript; 
+            if (event.results[i].isFinal) {
+              finalTranscript += event.results[i][0].transcript;
             }
           }
-  
-          console.log('תמלול עדכני: ', finalTranscript);
-          setCurrentTranscript(finalTranscript); 
+
+          setCurrentTranscript(finalTranscript);
         };
-  
+
         recognition.onerror = (event) => {
           console.error('שגיאה בתמלול:', event.error);
         };
-  
+
         recognition.onend = () => {
-          console.log('ההכרה הסתיימה');
-          console.log("finalTranscript: ", finalTranscript); 
-  
-          // שולח את התמלול אם יש
           if (finalTranscript.trim() !== '') {
             sendTranscription(finalTranscript);
             setCurrentTranscript(finalTranscript);
           }
         };
-  
+
         recognition.start();
-  
+
         mediaRecorderRef.current.ondataavailable = (event) => {
           audioChunksRef.current.push(event.data);
         };
-  
+
         mediaRecorderRef.current.onstop = () => {
           const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
           const audioUrl = URL.createObjectURL(audioBlob);
-  
-          // הוספת ההקלטה לרשימת הדיווחים (בלי תמלול בהתחלה)
-          const newReport = { id: Date.now(), audioUrl, transcript: '', isRecording: false };
+
+          const timeSent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          const newReport = { id: Date.now(), audioUrl, transcript: '', time: timeSent, isRecording: false };
           setReports((prevReports) => [...prevReports, newReport]);
-  
-          recognition.stop(); 
+
+          recognition.stop();
         };
-  
+
         mediaRecorderRef.current.start();
       })
       .catch((err) => {
         console.error('Error accessing microphone:', err);
       });
   };
-  
 
   const stopRecording = () => {
     if (mediaRecorderRef.current) {
@@ -92,71 +82,71 @@ const ReportsPage = ({ reports, setReports }) => {
     }
   };
 
-
-const sendTranscription = (transcript) => {
-    const timeSent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); 
+  const sendTranscription = (transcript) => {
+    const timeSent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     setReports((prevReports) => {
       const updatedReports = [...prevReports];
-      const lastReportIndex = updatedReports.length - 1; 
-  
+      const lastReportIndex = updatedReports.length - 1;
+
       if (lastReportIndex >= 0) {
-        updatedReports[lastReportIndex].transcript = transcript; 
-        updatedReports[lastReportIndex].text = `תמלול ההקלטה: ${transcript}`; 
-        updatedReports[lastReportIndex].time = timeSent; 
+        updatedReports[lastReportIndex].transcript = transcript;
+        updatedReports[lastReportIndex].text = `תמלול ההקלטה: ${transcript}`;
+        updatedReports[lastReportIndex].time = timeSent;
       }
-  
+
       return updatedReports;
     });
   };
-  
 
-
-const addReport = () => {
+  const addReport = () => {
     if (currentReport.trim() !== '') {
-      const timeSent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); 
+      const timeSent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       setReports((prevReports) => [
         ...prevReports,
-        { 
-          id: Date.now(), 
-          text: currentReport, 
-          isRecording: false, 
-          time: timeSent,      
+        {
+          id: Date.now(),
+          text: currentReport,
+          isRecording: false,
+          time: timeSent,
         },
       ]);
-      setCurrentReport(''); 
+      setCurrentReport('');
     }
   };
-  
 
   return (
     <div className="report-page">
       <div className="reports-title">עדכונים</div>
       <div className="reports-list">
-      {reports.map((report) => (
-  <React.Fragment key={report.id}>
-    {/* הצגת ההקלטה */}
-    {report.audioUrl && (
-      <div>
-        <audio controls src={report.audioUrl}></audio>
-        <div className="message-meta">
-          <span className="time">{report.time}</span>
+  {reports.map((report) => (
+    <React.Fragment key={report.id}>
+      {/* הצגת ההקלטה */}
+      {report.audioUrl && (
+        <div className="audio-container">
+          <audio controls src={report.audioUrl}></audio>
+          <div className="message-meta">
+            <span className="time">{report.time}</span>
+          </div>
         </div>
-      </div>
-    )}
-    {/* הצגת טקסט אם קיים */}
-    {report.text && (
-      <div className={`chat-bubble ${report.isTranscription ? 'transcription' : ''}`}>
-        <p>{report.text}</p>
-        <div className="message-meta">
-          <span className="time">{report.time}</span>
-          <span className="seen">{report.isSeen ? '✓✓' : ''}</span>
+      )}
+      {/* הצגת טקסט אם קיים */}
+      {report.text && (
+        <div
+          className={`chat-bubble ${
+            report.isOutgoing ? 'outgoing' : ''
+          } ${report.isTranscription ? 'transcription' : ''}`}
+        >
+          <p>{report.text}</p>
+          <div className="message-meta">
+            <span className="time">{report.time}</span>
+            {/* <span className="seen">{report.isSeen ? '✓✓' : ''}</span> */}
+          </div>
         </div>
-      </div>
-    )}
-  </React.Fragment>
-))}
+      )}
+    </React.Fragment>
+  ))}
+</div>
 
-      </div>
 
       <div className="input-bar">
         <textarea

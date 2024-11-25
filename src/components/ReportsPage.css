@@ -1,11 +1,10 @@
-
+/* עיצוב הדף הכללי */
 .report-page {
   display: flex;
   flex-direction: column;
   height: 100vh;
   background-color: #1a1a1a;
   color: white;
-  /* overflow: hidden; */
   position: sticky;
   width: 100%;
   max-width: 100%;
@@ -13,58 +12,60 @@
 
 .reports-list {
   flex: 1;
-  /* overflow-y: auto; */
   padding: 10px;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  direction: rtl; /* שינוי כיוון הטקסט להודעות נכנסות */
 }
 
-
 .reports-title {
-  background-color: #363636; 
-  color: white; 
-  text-align: right; 
-  padding: 10px 15px; 
-  font-size: 18px; 
-  font-weight: bold; 
-  direction: rtl; 
+  background-color: #363636;
+  color: white;
+  text-align: right;
+  padding: 10px 15px;
+  font-size: 18px;
+  font-weight: bold;
+  direction: rtl;
   border-bottom: 2px solid #363636;
-  position: sticky; 
+  position: sticky;
   top: 0;
-  z-index: 10; 
+  z-index: 10;
 }
 
 .chat-bubble {
+  position: relative;
   background-color: #2c2c2c;
   color: white;
-  padding: 10px;
+  padding: 10px 15px;
   margin: 5px 0;
-  border-radius: 15px;
+  border-radius: 8px;
   max-width: 70%;
   align-self: flex-start;
   word-wrap: break-word;
   white-space: pre-wrap;
   word-break: break-word;
   width: auto;
-  border-color: red;
-  border-style: groove;
-  border-width: 2px;
+  border: 2px solid #FFCC00; /* צבע הבועה */
+  margin-right: 10px;
+}
+
+.chat-bubble.outgoing {
+  align-self: flex-end; /* הודעות יוצאות מצד ימין */
 }
 
 .chat-bubble:not(.transcription) {
-  border-color: green; 
+  border: 0.6px solid #FFCC00; /* צבע הגבול להודעות רגילות */
 }
 
-
 .chat-bubble.transcription {
-  border-color: red; 
+  border-color: red; /* צבע הגבול להודעות תמלול */
 }
 
 .chat-bubble p {
   margin: 0;
+  color: #FFCC00 ;
 }
-
 
 .input-bar {
   display: flex;
@@ -78,9 +79,8 @@
 
 textarea {
   flex: 1;
-  /* height: 40px; */
-  min-height: 40px;  
-  max-height: 120px;  
+  min-height: 40px;
+  max-height: 120px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 15px;
@@ -88,11 +88,9 @@ textarea {
   color: white;
   resize: none;
   margin-left: 10px;
-  overflow-y: auto;  
-  width: 100%;  
+  overflow-y: auto;
+  width: 100%;
 }
-
-
 
 textarea::placeholder {
   color: #aaa;
@@ -112,7 +110,7 @@ button {
 .send-button {
   background-color: #4caf50;
   color: white;
-  transform: rotate(180deg); 
+  transform: rotate(180deg);
   align-items: center;
 }
 
@@ -121,15 +119,12 @@ button:hover {
 }
 
 .record-button {
-  background-color: #f44336; 
+  background-color: #f44336;
   color: white;
   margin-left: 10px;
   transition: background-color 0.3s;
   border: none;
-  /* width: 50px; */
-  /* height: 50px; */
   border-radius: 50%;
-  /* font-size: 20px; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -137,7 +132,7 @@ button:hover {
 }
 
 .record-button.active {
-  background-color: #4caf50; 
+  background-color: #4caf50;
   color: white;
 }
 
@@ -145,17 +140,20 @@ button:hover {
   margin: 10px 0;
   width: 100%;
 }
+
 .message-meta {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-top: 5px;
-    font-size: 10px;
-    color: #aaa;
-  }
-  
-  .message-meta .time {
-    margin-right: 5px;
-  }
-  
-  
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 5px;
+  font-size: 10px;
+  color: #aaa;
+}
+
+.message-meta .time {
+  margin-right: 5px;
+}
+
+.time {
+  margin-left: 10px;
+}
