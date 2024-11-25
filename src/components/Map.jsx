@@ -8,7 +8,7 @@ import { EditControl } from 'react-leaflet-draw';
 import ActionsBar from './ActionsBar';
 import MapLegend from './MapLegend'
 import fireIconImg from '../assets/fire-icon.svg';
-import parkingOption from '../assets/parking.png'
+import parkingOption from '../assets/parking1.png'
 
 
 const bounds = [[0, 0], [700, 700]]; // גבולות התמונה ביחידות מותאמות
@@ -120,23 +120,16 @@ const Map = ({ setReports, fireFightingView }) => {
 
 
   const [zones, setZones] = useState([{
-    //   desc: 'opt1',
-    //   id: 0,
-    //   coords: [
-    //     [647.3544723142452, 124.94868995633186]
-    //     [647.3544723142452, 55.90889429018705]
-    //   ],
-    // },
-    // {
-    //   desc: 'מכבסה',
-    //   id: 1,
-    //   coords: [
-    //     [51.505, -0.09],
-    //     [51.51, -0.1],
-    //     [51.51, -0.08],
-    //   ],
-    // },
-    // {
+    desc: 'opt1',
+    id: 0,
+    coords: [
+      [602.3544723142452, 62.90889429018705],
+      [602.3544723142452, 110.90889429018705],
+      [647.3544723142452, 110.94868995633186],
+      [647.3544723142452, 62.90889429018705]
+    ],
+  },
+  {
     desc: 'opt2',
     id: 1,
     coords:
@@ -149,7 +142,64 @@ const Map = ({ setReports, fireFightingView }) => {
 
       ],
   },
+  {
+    desc: 'opt3',
+    id: 1,
+    coords: [
+      [431.45338381448175, 516.173621982368],
+      [480.4301940369144, 552.1943849386174],
+      [433.4524372929484, 598.220915382714],
+      [392.4718409843824, 558.1978454313257]
+
+
+
+    ],
+  },
+  {
+    desc: 'opt4',
+    id: 1,
+    coords:
+      [
+        [212.2238574264967, 38.231471824598856],
+        [207.2262237303301, 93.26319300775778],
+        [127.26408459166475, 91.26203951018836],
+        [127.26408459166475, 33.22858808067531]
+
+      ],
+  },
+  {
+    desc: 'opt5',
+    id: 1,
+    coords:
+      [
+        [89.61523899668714, 268.0305882837604],
+        [89.61523899668714, 349.07730493532176],
+        [47.6351159488878, 352.07903518167586],
+        [53.63227638428771, 262.0271277910521],
+
+      ],
+  },
   ]);
+
+  const parkingIcon1 = L.divIcon({
+    className: "custom-icon",
+    html: `<img src="${parkingOption}" style="width: 90px; height: 52px; transform: rotate(45deg);" />`, // סיבוב ב-45 מעלות
+    iconSize: [100, 45],
+    iconAnchor: [50, 25],
+  });
+  const parkingIcon = L.divIcon({
+    className: "custom-icon",
+    html: `<img src="${parkingOption}" style="width: 90px; height: 52px; transform: rotate(90deg);" />`, // סיבוב ב-45 מעלות
+    iconSize: [100, 45],
+    iconAnchor: [50, 25],
+  });
+const parkingIcon2 = L.divIcon({
+    className: "custom-icon",
+    html: `<img src="${parkingOption}" style="width: 90px; height: 52px;" />`, // סיבוב ב-45 מעלות
+    iconSize: [100, 45],
+    iconAnchor: [50, 25],
+  });
+
 
   useEffect(() => {
     console.log(activeAction.name);
@@ -216,33 +266,46 @@ const Map = ({ setReports, fireFightingView }) => {
           </Marker>
         ))}
 
-      
-//תמונה של אזור חניה רכב הצלה
-        <Polygon positions={zones[0].coords} color="blue" fillOpacity={0.3} />
 
-        {/* הצגת האייקון של איקס אדום בתוך הפוליגון */}
-        <Marker position={[568.88, 430.64]} icon={crossIcon} />
+        {/* //תמונה של אזור חניה רכב הצלה */}
+        <Polygon positions={zones[0].coords} color="transparent" fillOpacity={0} />
+        <Marker position={[568.88, 430.64]} icon={parkingIcon1} />
+
+
+        <Polygon positions={zones[1].coords} color="transparent" fillOpacity={0} />
+        <Marker position={[635.85, 86.92]} icon={parkingIcon} />
+
+        <Polygon positions={zones[2].coords} color="transparent" fillOpacity={0} />
+        <Marker position={[434.45, 556.7]} icon={parkingIcon1} />
+
+        <Polygon positions={zones[3].coords} color="transparent" fillOpacity={0} />
+        <Marker position={[168.99, 64.50]} icon={parkingIcon} />
+
+        <Polygon positions={zones[4].coords} color="transparent" fillOpacity={0} />
+        <Marker position={[ 64.62707051585426,  306.0525047375793]} icon={parkingIcon2} />
+
+
 
         <Marker icon={fireIcon} position={[652, 110]} />
 
-        {zones.map((zone, index) => <Polygon
+        {/* {zones.map((zone, index) => <Polygon
           key={zone.id}
           positions={zone.coords}
-          fillColor={zone.color}
+          fillColor='transparent'
           pathOptions={{
 
-            color: 'red',
-            fillOpacity: zone.color ? 0.5 : 0,
+            color: 'transparent',
+            fillOpacity:  0,
             weight: 1, // עובי הגבול
           }}
 
-        />)}
+        />)} */}
 
 
 
         <MapClickHandler />
       </MapContainer>
-    
+
     </>
   );
 };

@@ -11,7 +11,7 @@ import loadingimg from './assets/landing.png'
 function App() {
   const [location, setLocation] = useState(null); // מיקום שנבחר במפה
   const [isWaringOpoup, setIsWaringOpoup] = useState(false);
-  const [isAppShown, setIsAppShown] = useState(true);
+  const [isAppShown, setIsAppShown] = useState(false);
   const [loading, setLoading] = useState(false);
   const [reports, setReports] = useState([]);
   const [fireFightingView, setFireFightingView] = useState(false)
