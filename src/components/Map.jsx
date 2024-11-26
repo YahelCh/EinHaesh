@@ -211,58 +211,84 @@ const Map = ({ setReports }) => {
       fireCoords,                  // סיום
     ],
   };
-const FireIcon = () => {
-  const map = useMap();
-  const [fireIconSize, setFireIconSize] = useState({ width: 50, height: 50 });
-  const firePosition = [570.1097758661681, 177.9148148148148];
+  const FireIcon = () => {
+    const map = useMap();
+    const [fireIconSize, setFireIconSize] = useState({ width: 50, height: 50 });
+    const [sizeIncreasedOnce, setSizeIncreasedOnce] = useState(false); // סימון אם הגדלנו את הגודל פעם ראשונה
+    const firePosition = [570.1097758661681, 177.9148148148148];
+  
+    useEffect(() => {
+      // פונקציה שמגדילה את גודל האש כל 3 שניות אחרי שהגדלנו פעם ראשונה
+      const increaseFireSize = () => {
+        setFireIconSize(prevSize => ({
+          width: prevSize.width + 10,  // כל 3 שניות, הגדל ב-10 פיקסלים
+          // height: prevSize.height + 10,
+        }));
+      };
 
-  useEffect(() => {
-    const updateFireIconSize = () => {
-      const zoomLevel = map.getZoom();
-      let newWidth = 50;
-
-      // התאמת גודל לפי רמת הזום
-      if (zoomLevel === -1) {
-        newWidth = 50;
-      } else if (zoomLevel === 0) {
-        newWidth = 50;
-      } else if (zoomLevel === 1) {
-        newWidth = 100;
-      } else if (zoomLevel >= 2) {
-        newWidth = 150;
+      const initialTimer = setTimeout(() => {
+        setSizeIncreasedOnce(true);  
+        increaseFireSize();  
+      }, 10000); 
+  
+      // אחרי 10 שניות, כל 3 שניות הגדלת הגודל
+      let intervalTimer;
+      if (sizeIncreasedOnce) {
+        intervalTimer = setInterval(increaseFireSize, 3000);  
       }
 
-      setFireIconSize({ width: newWidth });
-      console.log('Updated fire icon size:', newWidth);
-    };
+      return () => {
+        clearTimeout(initialTimer);
+        if (intervalTimer) {
+          clearInterval(intervalTimer);
+        }
+      };
+    }, [sizeIncreasedOnce]);  
+  
 
-    const focusOnFire = () => {
-      const zoomLevel = map.getZoom();
-      map.setView(firePosition, zoomLevel, { animate: true });
-    };
-
-    // מאזינים לשינויים בזום
-    map.on('zoom', () => {
-      updateFireIconSize();
-      focusOnFire();
+    useEffect(() => {
+      const updateFireIconSize = () => {
+        const zoomLevel = map.getZoom();
+        let newWidth = 50;
+  
+        if (zoomLevel === -1) {
+          newWidth = 50;
+        } else if (zoomLevel === 0) {
+          newWidth = 50;
+        } else if (zoomLevel === 1) {
+          newWidth = 100;
+        } else if (zoomLevel >= 2) {
+          newWidth = 150;
+        }
+  
+        setFireIconSize({ width: newWidth });
+      };
+  
+      const focusOnFire = () => {
+        const zoomLevel = map.getZoom();
+        map.setView(firePosition, zoomLevel, { animate: true });
+      };
+  
+      map.on('zoom', () => {
+        updateFireIconSize();
+        focusOnFire();
+      });
+      return () => {
+        map.off('zoom', updateFireIconSize);
+        map.off('zoom', focusOnFire);
+      };
+    }, [map]);
+  
+    const fireIcon = L.divIcon({
+      className: 'fire-icon',
+      html: `<img src="${fireIconImg}" alt="Fire Icon" style="width: ${fireIconSize.width}px; height: ${fireIconSize.height}px;" />`,
+      iconSize: [fireIconSize.width, fireIconSize.height],
+      iconAnchor: [fireIconSize.width / 2, fireIconSize.height / 2],
     });
-
-    // מנקים את המאזינים כשעוזבים את הרכיב
-    return () => {
-      map.off('zoom', updateFireIconSize);
-      map.off('zoom', focusOnFire);
-    };
-  }, [map]);
-
-  const fireIcon = L.divIcon({
-    className: 'fire-icon',
-    html: `<img src="${fireIconImg}" alt="Fire Icon" style="width: ${fireIconSize.width}px; height: ${fireIconSize.height}px;" />`,
-    iconSize: [fireIconSize.width, fireIconSize.height],
-    iconAnchor: [fireIconSize.width / 2, fireIconSize.height / 2],
-  });
-
-  return <Marker position={firePosition} icon={fireIcon} />;
-};
+  
+    return <Marker position={firePosition} icon={fireIcon} />;
+  };
+  
 
 
   return (
