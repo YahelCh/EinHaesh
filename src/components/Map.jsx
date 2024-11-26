@@ -249,7 +249,7 @@ const Map = ({ setReports }) => {
         />
         {markers.map((marker, index) => (
           <Marker key={index} {...marker}>
-            <Popup>{marker.popup}</Popup>
+            
           </Marker>
         ))}
 
