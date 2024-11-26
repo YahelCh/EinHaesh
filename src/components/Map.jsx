@@ -10,7 +10,7 @@ import MapLegend from './MapLegend';
 import fireIconImg from '../assets/fire-icon.svg';
 import parkingOption from '../assets/parking1.png';
 
-const bounds = [[0, 0], [700, 700]]; // 
+ const bounds = [[0, 0], [700, 700]]; 
 
 const Map = ({ setReports }) => {
   const [activeAction, setActiveAction] = useState({});
@@ -28,7 +28,7 @@ const Map = ({ setReports }) => {
 
     const [iconSize, setIconSize] = useState(70);
     const [iconAnchor, setIconAnchor] = useState([50, 25]);
-
+   
     useEffect(() => {
 
       const updateIconSize = () => {
@@ -100,20 +100,6 @@ const Map = ({ setReports }) => {
     </Marker>
   }
 
-  // Icons לחניות
-
-
-
-
-
-  const fireIcon = L.divIcon({
-    className: 'fire-icon',
-    html: `<img src="${fireIconImg}" alt="Fire Icon" width="50" height="50" />`,
-    iconSize: [20, 20],
-    iconAnchor: [10, 10]
-  });
-
-
   useEffect(() => {
     console.log(activeAction.name);
   }, [activeAction]);
@@ -126,9 +112,6 @@ const Map = ({ setReports }) => {
     { lat: 168.99, lng: 64.50, icon: 'parkingIcon4' },
     { lat: 64.63, lng: 306.05, icon: 'parkingIcon2' },
   ];
-
-
-
 
   const MapClickHandler = () => {
     const map = useMapEvents({
@@ -156,8 +139,6 @@ const Map = ({ setReports }) => {
       }
     });
   };
-
-
 
   const handleParkingClick = () => {
     setShowParking(prevState => !prevState);
@@ -230,6 +211,84 @@ const Map = ({ setReports }) => {
       fireCoords,                  // סיום
     ],
   };
+  const FireIcon = () => {
+    const map = useMap();
+    const [fireIconSize, setFireIconSize] = useState({ width: 50, height: 50 });
+    const [sizeIncreasedOnce, setSizeIncreasedOnce] = useState(false); // סימון אם הגדלנו את הגודל פעם ראשונה
+    const firePosition = [570.1097758661681, 177.9148148148148];
+  
+    useEffect(() => {
+      // פונקציה שמגדילה את גודל האש כל 3 שניות אחרי שהגדלנו פעם ראשונה
+      const increaseFireSize = () => {
+        setFireIconSize(prevSize => ({
+          width: prevSize.width + 10,  // כל 3 שניות, הגדל ב-10 פיקסלים
+          // height: prevSize.height + 10,
+        }));
+      };
+
+      const initialTimer = setTimeout(() => {
+        setSizeIncreasedOnce(true);  
+        increaseFireSize();  
+      }, 10000); 
+  
+      // אחרי 10 שניות, כל 3 שניות הגדלת הגודל
+      let intervalTimer;
+      if (sizeIncreasedOnce) {
+        intervalTimer = setInterval(increaseFireSize, 3000);  
+      }
+
+      return () => {
+        clearTimeout(initialTimer);
+        if (intervalTimer) {
+          clearInterval(intervalTimer);
+        }
+      };
+    }, [sizeIncreasedOnce]);  
+  
+
+    useEffect(() => {
+      const updateFireIconSize = () => {
+        const zoomLevel = map.getZoom();
+        let newWidth = 50;
+  
+        if (zoomLevel === -1) {
+          newWidth = 50;
+        } else if (zoomLevel === 0) {
+          newWidth = 50;
+        } else if (zoomLevel === 1) {
+          newWidth = 100;
+        } else if (zoomLevel >= 2) {
+          newWidth = 150;
+        }
+  
+        setFireIconSize({ width: newWidth });
+      };
+  
+      const focusOnFire = () => {
+        const zoomLevel = map.getZoom();
+        map.setView(firePosition, zoomLevel, { animate: true });
+      };
+  
+      map.on('zoom', () => {
+        updateFireIconSize();
+        focusOnFire();
+      });
+      return () => {
+        map.off('zoom', updateFireIconSize);
+        map.off('zoom', focusOnFire);
+      };
+    }, [map]);
+  
+    const fireIcon = L.divIcon({
+      className: 'fire-icon',
+      html: `<img src="${fireIconImg}" alt="Fire Icon" style="width: ${fireIconSize.width}px; height: ${fireIconSize.height}px;" />`,
+      iconSize: [fireIconSize.width, fireIconSize.height],
+      iconAnchor: [fireIconSize.width / 2, fireIconSize.height / 2],
+    });
+  
+    return <Marker position={firePosition} icon={fireIcon} />;
+  };
+  
 
 
   return (
@@ -274,7 +333,7 @@ const Map = ({ setReports }) => {
             ))}
           </>
         )}
-        <Marker position={[570.1097758661681, 177.9148148148148]} icon={fireIcon} />
+        <FireIcon />
 
 
         <MapClickHandler />
