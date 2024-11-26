@@ -97,9 +97,9 @@
   /* Lighter color */
 }
 
- path {
-  fill: #FFCC00; /* Change the fill color of the path when focused */
-}
+ /* path {
+  fill: #FFCC00; 
+} */
 
 /* On active (click) */
 .action:active {

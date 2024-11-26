@@ -1,227 +1,103 @@
 import { useState, useRef, useEffect } from 'react';
 import React from 'react';
-import { MapContainer, ImageOverlay, Marker, Polygon, useMapEvents, Popup } from 'react-leaflet';
+import { MapContainer, ImageOverlay, Marker, Polygon, useMapEvents, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import basePlan from '../assets/mapmap.png';
 import { EditControl } from 'react-leaflet-draw';
 import ActionsBar from './ActionsBar';
-import MapLegend from './MapLegend'
+import MapLegend from './MapLegend';
 import fireIconImg from '../assets/fire-icon.svg';
-import parkingOption from '../assets/parking1.png'
+import parkingOption from '../assets/parking1.png';
 
+const bounds = [[0, 0], [700, 700]]; // 
 
-const bounds = [[0, 0], [700, 700]]; // גבולות התמונה ביחידות מותאמות
-
-const Map = ({ setReports, fireFightingView }) => {
+const Map = ({ setReports }) => {
   const [activeAction, setActiveAction] = useState({});
   const [markers, setMarkers] = useState([]);
+  const [showParking, setShowParking] = useState(false); 
+  const [selectedParkingCoords, setSelectedParkingCoords] = useState(null); 
+  const [activeRoute, setActiveRoute] = useState(null); 
 
-
-  //   const path = [
-  //     markers[0].position, // מיקום נקודה 1
-  //     markers[1].position, // מיקום נקודה 2
-  //     markers[2].position, // מיקום נקודה 3
-  //   ];
-
-  const smokeZone = [
-    [173, 42],
-    [173, 70],
-    [113, 70],
-
-    [113, 42]
-
-  ];
-
-  const signs = [
-    { text: 'ארון כיבוי', color: 'white' },
-    { text: 'ברז גז', color: 'red' },
-    { text: 'שער', color: 'green' },
-    { text: 'גנרטור', color: 'blue' },
-    { text: 'הידרנט', color: '#36caca' },
-    { text: 'דלת', color: '#c72830' },
-    { text: 'לוח חשמל', color: '#eeba11' },
-  ]
-
-  function createColorfulIcon(color) {
-    return L.divIcon({
-      className: 'custom-div-icon',
-      html: `<div class="point" style="background-color:${color};"></div>`,
-      iconSize: [5, 5], // גודל האייקון
-      iconAnchor: [10, 10] // המרכז של האייקון
-    });
-  }
-  const colors = ['red', 'green', 'blue', '#36caca', '#c72830', '#eeba11'];
-
-  const [signsOnMap, setSignsOnMap] = useState([
-
-  ])
-
-  const generateRandomCoordinates = () => {
-    const lat = Math.floor(Math.random() * (445 - 0 + 1) + 0);
-    // טווח אקראי של קו רוחב
-    const lng = Math.floor(Math.random() * (424 - 0 + 1) + 0);  // טווח אקראי של קו אורך
-    return [lat, lng];
-  };
-
-  const fireIcon = L.divIcon({
-    className: 'fire-icon',
-    html: `
-          <img src="${fireIconImg}" alt="Fire Icon" width="50" height="50" />
-        `,
-    iconSize: [20, 20], // גודל האייקון
-    iconAnchor: [10, 10] // המרכז של האייקון
-  })
-
-  useEffect(() => {
-
-
-    const newMarkers = [];
-    for (let i = 0; i < 20; i++) {  // יצירת 5 נקודות אקראיות
-      const randomCoords = generateRandomCoordinates();
-      const color = colors[i % colors.length];
-      newMarkers.push({
-        position: randomCoords,
-        icon: createColorfulIcon(color),
-        id: i,
-        popup: `Marker ${i + 1}`,
-      });
-    }
-    setSignsOnMap(newMarkers);
-  }, []);
-
-  const crossIcon = L.divIcon({
-    className: 'cross-icon',
-    html: `
-      <div style="width: 30px; height: 30px; background-color: transparent; position: relative;">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-                    color: red; font-size: 20px; font-weight: bold; 
-     background: 
-         linear-gradient(to top left,
-             rgba(0,0,0,0) 0%,
-             rgba(0,0,0,0) calc(50% - 0.8px),
-             rgba(0,0,0,1) 50%,
-             rgba(0,0,0,0) calc(50% + 0.8px),
-             rgba(0,0,0,0) 100%),
-         linear-gradient(to top right,
-             rgba(0,0,0,0) 0%,
-             rgba(0,0,0,0) calc(50% - 0.8px),
-             rgba(0,0,0,1) 50%,
-             rgba(0,0,0,0) calc(50% + 0.8px),
-             rgba(0,0,0,0) 100%);
-">
-         0
-        </div>
-      </div>
-    `,
-    iconSize: [30, 30], // גודל האייקון
-    iconAnchor: [15, 15], // העוגן יהיה במרכז
+const mapRef = useRef(); 
+  // Icons לחניות
+  const parkingIcon0 = L.divIcon({
+    className: "custom-icon",
+    html: `<img src="${parkingOption}" style=" height: 70px;transform: rotate(43deg) scale(1);"  />`, // חניה שמאלית למעלה
+    iconSize: [100, 45],
+    iconAnchor: [50, 25],
   });
-
-
-  const [zones, setZones] = useState([{
-    desc: 'opt1',
-    id: 0,
-    coords: [
-      [602.3544723142452, 62.90889429018705],
-      [602.3544723142452, 110.90889429018705],
-      [647.3544723142452, 110.94868995633186],
-      [647.3544723142452, 62.90889429018705]
-    ],
-  },
-  {
-    desc: 'opt2',
-    id: 1,
-    coords:
-      [[576.3842877425461, 373.1805429677845],
-      [621.3842877425461, 420.1805429677845],
-
-      [560.3563653573119, 488.12286808931367],
-
-      [517.3833412210128, 441.0917236549394],
-
-      ],
-  },
-  {
-    desc: 'opt3',
-    id: 1,
-    coords: [
-      [431.45338381448175, 516.173621982368],
-      [480.4301940369144, 552.1943849386174],
-      [433.4524372929484, 598.220915382714],
-      [392.4718409843824, 558.1978454313257]
-
-
-
-    ],
-  },
-  {
-    desc: 'opt4',
-    id: 1,
-    coords:
-      [
-        [212.2238574264967, 38.231471824598856],
-        [207.2262237303301, 93.26319300775778],
-        [127.26408459166475, 91.26203951018836],
-        [127.26408459166475, 33.22858808067531]
-
-      ],
-  },
-  {
-    desc: 'opt5',
-    id: 1,
-    coords:
-      [
-        [89.61523899668714, 268.0305882837604],
-        [89.61523899668714, 349.07730493532176],
-        [47.6351159488878, 352.07903518167586],
-        [53.63227638428771, 262.0271277910521],
-
-      ],
-  },
-  ]);
 
   const parkingIcon1 = L.divIcon({
     className: "custom-icon",
-    html: `<img src="${parkingOption}" style="width: 90px; height: 52px; transform: rotate(45deg);" />`, // סיבוב ב-45 מעלות
+    html: `<img src="${parkingOption}" style=" height: 70px; " />`, //  החניות הימניות 2
+    iconSize: [100, 45],
+    iconAnchor: [50, 25],
+  }); 
+   const parkingIcon2 = L.divIcon({
+    className: "custom-icon",
+    html: `<img src="${parkingOption}" style=" height: 70px; transform: rotate(-47deg) scale(1);" />`, // חניה למטה
     iconSize: [100, 45],
     iconAnchor: [50, 25],
   });
-  const parkingIcon = L.divIcon({
+  const parkingIcon3 = L.divIcon({
     className: "custom-icon",
-    html: `<img src="${parkingOption}" style="width: 90px; height: 52px; transform: rotate(90deg);" />`, // סיבוב ב-45 מעלות
-    iconSize: [100, 45],
-    iconAnchor: [50, 25],
-  });
-const parkingIcon2 = L.divIcon({
-    className: "custom-icon",
-    html: `<img src="${parkingOption}" style="width: 90px; height: 52px;" />`, // סיבוב ב-45 מעלות
+    html: `<img src="${parkingOption}" style=" height: 70px; " />`, //  החניות הימניות 2
     iconSize: [100, 45],
     iconAnchor: [50, 25],
   });
 
+  const parkingIcon4 = L.divIcon({
+    className: "custom-icon",
+    html: `<img src="${parkingOption}" style=" height: 70px;transform: rotate(43deg) scale(1);"  />`, // חניה שמאלית למטה
+    iconSize: [100, 45],
+    iconAnchor: [50, 25],
+  });
+
+
+
+  const fireIcon = L.divIcon({
+    className: 'fire-icon',
+    html: `<img src="${fireIconImg}" alt="Fire Icon" width="50" height="50" />`, 
+    iconSize: [20, 20], 
+    iconAnchor: [10, 10] 
+  });
+  
 
   useEffect(() => {
     console.log(activeAction.name);
+  }, [activeAction]);
 
-  }, [activeAction])
+  // הגדרת נקודות החניות
+const parkingPoints = [
+  { lat: 568.88, lng: 430.64, icon: parkingIcon1 },
+  { lat: 635.85, lng: 86.92, icon: parkingIcon0 },
+  { lat: 434.45, lng: 556.7, icon: parkingIcon3 },
+  { lat: 168.99, lng: 64.50, icon: parkingIcon4 },
+  { lat: 64.63, lng: 306.05, icon: parkingIcon2 }, 
+];
+
 
   const MapClickHandler = () => {
     const map = useMapEvents({
       click(event) {
-        if (activeAction && activeAction.activeIcon) { // בדוק אם יש אייקון פעיל
-          const newMarker = event.latlng; // מיקום הלחיצה
+        if (activeAction && activeAction.activeIcon) { 
+          const newMarker = event.latlng; 
           console.log(event.latlng);
 
           const icon = L.icon({
-            iconUrl: activeAction.activeIcon, // השתמש באייקון שנבחר
-            iconSize: [32, 32], // גודל האייקון
-            iconAnchor: [16, 32], // עוגן האייקון
-            popupAnchor: [0, -32], // מיקום הפופאפ ביחס לאייקון
+            iconUrl: activeAction.activeIcon, 
+            iconSize: [32, 32], 
+            iconAnchor: [16, 32], 
+            popupAnchor: [0, -32], 
+          });
+
+          const timeSent = new Date().toLocaleString('he-IL', {
+            timeStyle: 'short'
           });
           setReports((prevReports) => [
             ...prevReports,
-            { id: Date.now(), text: activeAction.reportText, isRecording: false },
+            { id: Date.now(), text: activeAction.reportText, isRecording: false , time: timeSent },
           ]);
           setMarkers((prevMarkers) => [...prevMarkers, { position: newMarker, icon }]);
         }
@@ -229,35 +105,94 @@ const parkingIcon2 = L.divIcon({
     });
   };
 
-  const handleZoneClick = (zoneIndex) => {
-    if (activeAction.name === 'fire') {
-      setZones(prev => {
-        let temp = [...prev];
-        temp[zoneIndex].color = 'rgba(255, 0, 0, 0.5)'; // צבע אדום עם שקיפות עבור אש
-        return temp;
-      })
-    }
-    if (activeAction.name == 'smoke') {
-      setZones(prev => {
-        let temp = [...prev];
-        temp[zoneIndex].color = '#333333';
-        return temp;
-      })
+
+  
+  const handleParkingClick = () => {
+    setShowParking(prevState => !prevState);
+ 
+  };
+
+  const fireCoords = { lat: 570.11, lng: 177.91 }; // הנקודה של האש 
+
+  const handleOnClickOnParking = (parkingName) => {
+    console.log(`Clicked on: ${parkingName}`); // בדיקה: הדפסת שם החניה
+
+    const route = parkingRoutes[parkingName]; // שליפת המסלול לפי שם החניה
+    if (activeRoute === parkingName) {
+      if (mapRef.current) {
+        mapRef.current.eachLayer((layer) => {
+          if (layer instanceof L.Polyline) {
+            mapRef.current.removeLayer(layer); // מסיר את המסלול
+          }
+        });
+      }
+      setActiveRoute(null); 
+    } else {
+     
+      const route = parkingRoutes[parkingName];
+      if (route && mapRef.current) {
+        const map = mapRef.current;
+        const polyline = L.polyline(route.map(point => [point.lat, point.lng]), {
+          color: 'blue',
+          weight: 5,
+          opacity: 0.7,
+        }).addTo(map);
+ 
+        setActiveRoute(parkingName); 
+      }
     }
   };
+ 
+  // הגדרת נקודות המסלול (נקודת התחלה + עיקולים + נקודת סיום)
+const parkingRoutes = {
+  parking1: [
+    { lat: 568.88, lng: 430.64 }, // חניה 1
+    { lat: 517.1040482417274, lng: 502.0748148148148 },  // עיקול 1
+    {  lat: 468.0987528908293, lng: 453.0506172839506 },  // עיקול 2
+    { lat: 558.10847904554, lng: 366.0076543209876 },  // עיקול 3
+    fireCoords,                  // סיום
+  ],
+  parking2: [
+    { lat: 635.85, lng: 86.92 }, // חניה 2
+    { lat: 635.85, lng:  172.26425925925926 },  // עיקול 1
+  
+    fireCoords,                  // סיום
+  ],
+  parking3: [
+    { lat: 434.45, lng: 556.7 }, // חניה 3
+    { lat: 538.1063176778265, lng: 531.0891358024692},  // עיקול 1
+    {  lat: 468.0987528908293, lng: 453.0506172839506 },  // עיקול 2
+    { lat: 558.10847904554, lng: 366.0076543209876 },  // עיקול 3
+
+    fireCoords,                  // סיום
+  ],
+  parking4: [
+    { lat: 168.99, lng: 64.50 }, // חניה 4
+    { lat: 220.071951931182, lng: 64.50},  // עיקול 1
+     { lat: 220.0742213672812, lng: 175.9138271604938 },  // עיקול 2
+    fireCoords,                  // סיום
+  ],
+  parking5: [
+    { lat: 64.63, lng: 306.05 }, // חניה 5
+    { lat: 64.63, lng: 179.91580246913583},  // עיקול 1
+    fireCoords,                  // סיום
+  ],
+};
+
 
   return (
     <>
-      <ActionsBar activeAction={activeAction} setActiveAction={setActiveAction} />
-
+      <ActionsBar activeAction={activeAction} setActiveAction={setActiveAction} onParkingClick={handleParkingClick} />
+      
       <MapContainer
-        center={[350, 350]} // נקודת ההתחלה של התצוגה
-        zoom={-1} // שליטה ברמת הזום
+        center={[350, 350]} 
+        zoom={-1} 
         style={{ marginTop: '10%', height: "90%", width: "100%", borderRadius: '10px' }}
-        crs={L.CRS.Simple} // משתמשים בקואורדינטות פשוטות ולא גיאוגרפיות
+        crs={L.CRS.Simple} 
+        ref={mapRef} 
       >
         <ImageOverlay
-          url={basePlan} // הנתיב לתמונה
+          url={basePlan}
           bounds={bounds}
         />
         {markers.map((marker, index) => (
@@ -266,46 +201,29 @@ const parkingIcon2 = L.divIcon({
           </Marker>
         ))}
 
+        {showParking && (
+          <>
+       
+              {parkingPoints.map((point, index) => (
+      <><Marker key={index} position={[point.lat, point.lng]} 
+      icon={point.icon}
+      eventHandlers={{
+        click: () => handleOnClickOnParking(`parking${index + 1}`), // שמירת החניה שנלחצה
+      }}
 
-        {/* //תמונה של אזור חניה רכב הצלה */}
-        <Polygon positions={zones[0].coords} color="transparent" fillOpacity={0} />
-        <Marker position={[568.88, 430.64]} icon={parkingIcon1} />
-
-
-        <Polygon positions={zones[1].coords} color="transparent" fillOpacity={0} />
-        <Marker position={[635.85, 86.92]} icon={parkingIcon} />
-
-        <Polygon positions={zones[2].coords} color="transparent" fillOpacity={0} />
-        <Marker position={[434.45, 556.7]} icon={parkingIcon1} />
-
-        <Polygon positions={zones[3].coords} color="transparent" fillOpacity={0} />
-        <Marker position={[168.99, 64.50]} icon={parkingIcon} />
-
-        <Polygon positions={zones[4].coords} color="transparent" fillOpacity={0} />
-        <Marker position={[ 64.62707051585426,  306.0525047375793]} icon={parkingIcon2} />
-
-
-
-        <Marker icon={fireIcon} position={[652, 110]} />
-
-        {/* {zones.map((zone, index) => <Polygon
-          key={zone.id}
-          positions={zone.coords}
-          fillColor='transparent'
-          pathOptions={{
-
-            color: 'transparent',
-            fillOpacity:  0,
-            weight: 1, // עובי הגבול
-          }}
-
-        />)} */}
-
+      >
+                  <Popup>{`חניה ${index + 1}`}</Popup>
+                </Marker>{selectedParkingCoords &&
+                 <Polyline positions={routePoints.map(point => [point.lat, point.lng])} color="blue" weight={5} opacity={0.7} />}
+                </>
+    ))}
+          </>
+        )}
+  <Marker  position={[ 570.1097758661681, 177.9148148148148]} icon={fireIcon} />
 
 
         <MapClickHandler />
       </MapContainer>
-
     </>
   );
 };
