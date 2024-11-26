@@ -8,6 +8,10 @@ import iconTrappedActive from '../assets/actions_icons/iconTrappedActive.svg';
 import iconTrapped from '../assets/actions_icons/iconTrapped.svg';
 import iconSmoke from '../assets/actions_icons/smoke-icon.svg';
 import iconSmokeActive from '../assets/actions_icons/smoke-iconActive.svg';
+import gasTapIcon from '../assets/actions_icons/gasTapIcon.svg';
+import gasTapIconActive from '../assets/actions_icons/gasTapIconActive.svg';
+import fireCabinetIcon from '../assets/actions_icons/fireCabinetIcon.svg';
+import fireCabinetIconActive from '../assets/actions_icons/fireCabinetIconActive.svg';
 import iconParking from '../assets/actions_icons/iconParking.svg';
 // import iconParkingActive from '../assets/actions_icons/iconParkingActive';
 
@@ -18,6 +22,9 @@ const ActionsBar = ({ setActiveAction, activeAction, onParkingClick }) => {
         { name: 'fire', icon: iconFire, activeIcon: iconFireActive, reportText: 'מוקד בעירה נוסף מסדרון' },
         { name: 'trapped', icon: iconTrapped, activeIcon: iconTrappedActive, reportText: 'דיווח על לכודים תא 12' },
         { name: 'smoke', icon: iconSmoke, activeIcon: iconSmokeActive, reportText: 'עשן חדר אוכל ותאים 2,3,4' },
+        { name: 'gas', icon: gasTapIcon, activeIcon: gasTapIconActive, reportText: 'סגירת ברז גז' },
+        { name: 'fireCabinet', icon: fireCabinetIcon, activeIcon: fireCabinetIconActive, reportText: 'ארון כיבוי' },
+
         { 
             name: 'parking', 
             icon: iconParking, 
