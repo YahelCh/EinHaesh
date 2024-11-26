@@ -10,7 +10,7 @@ import MapLegend from './MapLegend';
 import fireIconImg from '../assets/fire-icon.svg';
 import parkingOption from '../assets/parking1.png';
 
- const bounds = [[0, 0], [700, 700]]; 
+const bounds = [[0, 0], [700, 700]];
 
 const Map = ({ setReports }) => {
   const [activeAction, setActiveAction] = useState({});
@@ -28,22 +28,21 @@ const Map = ({ setReports }) => {
 
     const [iconSize, setIconSize] = useState(70);
     const [iconAnchor, setIconAnchor] = useState([50, 25]);
-   
+
     useEffect(() => {
 
       const updateIconSize = () => {
         const zoomLevel = map.getZoom();
-        if(zoomLevel==0)
-        {
+        if (zoomLevel == 0) {
           setIconSize(70)
           setIconAnchor([50, 25])
           return;
         }
-        const newSize=(70 + zoomLevel) * (zoomLevel*2)
+        const newSize = (70 + zoomLevel) * (zoomLevel * 2)
         setIconSize(newSize); // עדכון גודל האייקון בהתאם לזום
-        setIconAnchor([newSize/2,newSize/2])
+        setIconAnchor([newSize / 2, newSize / 2])
         console.log('new size ', newSize);
-        
+
       };
       // מאזינים לשינויי זום
       map.on('zoom', updateIconSize);
@@ -120,12 +119,20 @@ const Map = ({ setReports }) => {
           const newMarker = event.latlng;
           console.log(event.latlng);
 
-          const icon = L.icon({
-            iconUrl: activeAction.activeIcon,
+          // const icon = L.icon({
+          //   iconUrl: activeAction.activeIcon,
+          //   iconSize: [32, 32],
+          //   iconAnchor: [16, 32],
+          //   popupAnchor: [0, -32],
+          // });
+
+          const icon = L.divIcon({
+            className: "custom",
+            html: `<div class="action-mark"><img src="${activeAction.activeIcon}" style=" height: 20px;, width:20px;"  /></div>`, // חניה שמאלית למטה
             iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32],
-          });
+            iconAnchor: [16, 16],
+            popupAnchor: [0, -32]
+          })
 
           const timeSent = new Date().toLocaleString('he-IL', {
             timeStyle: 'short'
@@ -216,7 +223,7 @@ const Map = ({ setReports }) => {
     const [fireIconSize, setFireIconSize] = useState({ width: 50, height: 50 });
     const [sizeIncreasedOnce, setSizeIncreasedOnce] = useState(false); // סימון אם הגדלנו את הגודל פעם ראשונה
     const firePosition = [570.1097758661681, 177.9148148148148];
-  
+
     useEffect(() => {
       // פונקציה שמגדילה את גודל האש כל 3 שניות אחרי שהגדלנו פעם ראשונה
       const increaseFireSize = () => {
@@ -227,14 +234,14 @@ const Map = ({ setReports }) => {
       };
 
       const initialTimer = setTimeout(() => {
-        setSizeIncreasedOnce(true);  
-        increaseFireSize();  
-      }, 10000); 
-  
+        setSizeIncreasedOnce(true);
+        increaseFireSize();
+      }, 10000);
+
       // אחרי 10 שניות, כל 3 שניות הגדלת הגודל
       let intervalTimer;
       if (sizeIncreasedOnce) {
-        intervalTimer = setInterval(increaseFireSize, 3000);  
+        intervalTimer = setInterval(increaseFireSize, 3000);
       }
 
       return () => {
@@ -243,14 +250,14 @@ const Map = ({ setReports }) => {
           clearInterval(intervalTimer);
         }
       };
-    }, [sizeIncreasedOnce]);  
-  
+    }, [sizeIncreasedOnce]);
+
 
     useEffect(() => {
       const updateFireIconSize = () => {
         const zoomLevel = map.getZoom();
         let newWidth = 50;
-  
+
         if (zoomLevel === -1) {
           newWidth = 50;
         } else if (zoomLevel === 0) {
@@ -260,15 +267,15 @@ const Map = ({ setReports }) => {
         } else if (zoomLevel >= 2) {
           newWidth = 150;
         }
-  
+
         setFireIconSize({ width: newWidth });
       };
-  
+
       const focusOnFire = () => {
         const zoomLevel = map.getZoom();
         map.setView(firePosition, zoomLevel, { animate: true });
       };
-  
+
       map.on('zoom', () => {
         updateFireIconSize();
         focusOnFire();
@@ -278,17 +285,17 @@ const Map = ({ setReports }) => {
         map.off('zoom', focusOnFire);
       };
     }, [map]);
-  
+
     const fireIcon = L.divIcon({
       className: 'fire-icon',
       html: `<img src="${fireIconImg}" alt="Fire Icon" style="width: ${fireIconSize.width}px; height: ${fireIconSize.height}px;" />`,
       iconSize: [fireIconSize.width, fireIconSize.height],
       iconAnchor: [fireIconSize.width / 2, fireIconSize.height / 2],
     });
-  
+
     return <Marker position={firePosition} icon={fireIcon} />;
   };
-  
+
 
 
   return (
@@ -308,7 +315,7 @@ const Map = ({ setReports }) => {
         />
         {markers.map((marker, index) => (
           <Marker key={index} {...marker}>
-            
+
           </Marker>
         ))}
 

@@ -37,8 +37,9 @@ const ActionsBar = ({ setActiveAction, activeAction, onParkingClick }) => {
                         if (action.name === 'parking') {
                             console.log('Parking action triggered'); 
                             onParkingClick(); 
-                            setActiveAction(action); 
+                            
                         } 
+                        setActiveAction(action); 
                     }}
                 >
                     <img 

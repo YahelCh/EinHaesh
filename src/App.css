@@ -108,6 +108,17 @@
   fill: #FFCC00;
  }
 
+ .action-mark{
+  border-radius: 100px;
+  opacity: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #282A2D;
+  width:32px;
+  height:32px;
+ }
+
 .map-legend {
   position: absolute;
   left: 0;
