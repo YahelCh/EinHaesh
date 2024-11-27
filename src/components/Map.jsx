@@ -3,6 +3,7 @@ import React from 'react';
 import { MapContainer, ImageOverlay, Marker, Polygon, useMap, useMapEvents, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import BaseMap from './FullSizeImage'
 import basePlan from '../assets/mapmap.png';
 import { EditControl } from 'react-leaflet-draw';
 import ActionsBar from './ActionsBar';
@@ -314,14 +315,11 @@ const Map = ({ setReports ,setHighlighted}) => {
       <MapContainer
         center={[350, 350]}
         zoom={-1}
-        style={{ marginTop: '10%', height: "90%", width: "100%", borderRadius: '10px' }}
+        style={{position:'absolute',bottom:'0', height: "90%", width: "100%", borderRadius: '10px' }}
         crs={L.CRS.Simple}
         ref={mapRef}
       >
-        <ImageOverlay
-          url={basePlan}
-          bounds={bounds}
-        />
+        <BaseMap/>
         {markers.map((marker, index) => (
           <Marker key={index} {...marker}>
 
