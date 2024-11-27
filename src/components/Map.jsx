@@ -10,6 +10,8 @@ import ActionsBar from './ActionsBar';
 import MapLegend from './MapLegend';
 import fireIconImg from '../assets/fire-icon.svg';
 import parkingOption from '../assets/parking1.png';
+import Taim from './Taim';
+import { TaimLst } from '../store/dec'
 
 const bounds = [[0, 0], [700, 700]];
 
@@ -19,6 +21,7 @@ const Map = ({ setReports ,setHighlighted}) => {
   const [showParking, setShowParking] = useState(false);
   const [selectedParkingCoords, setSelectedParkingCoords] = useState(null);
   const [activeRoute, setActiveRoute] = useState(null);
+  const [taimList, setTaimList] = useState(TaimLst);
 
   const mapRef = useRef();
 
@@ -191,6 +194,26 @@ const Map = ({ setReports ,setHighlighted}) => {
     }
   };
 
+  const handleClickZone = (index) => {
+    let desc = TaimLst.find(f => f.id == index)?.desc
+    const timeSent = new Date().toLocaleString('he-IL', {
+      timeStyle: 'short'
+    });
+    setReports((prevReports) => [
+      ...prevReports,
+      { id: Date.now(), text: `${activeAction.reportText} ${desc}`, isRecording: false, time: timeSent },
+    ]);
+
+    if (activeAction.name == "pinuy") {
+      setTaimList((prevList) =>
+        prevList.map((item) =>
+          item.id === index ? { ...item, numAsirim: 0 } : item
+        )
+      );
+
+    }
+  };
+
   // הגדרת נקודות המסלול (נקודת התחלה + עיקולים + נקודת סיום)
   const parkingRoutes = {
     parking1: [
@@ -229,7 +252,7 @@ const Map = ({ setReports ,setHighlighted}) => {
   const FireIcon = () => {
     const map = useMap();
     const [fireIconSize, setFireIconSize] = useState({ width: 50, height: 50 });
-    const [sizeIncreasedOnce, setSizeIncreasedOnce] = useState(false); 
+    const [sizeIncreasedOnce, setSizeIncreasedOnce] = useState(false);
     const firePosition = [570.1097758661681, 177.9148148148148];
 
     useEffect(() => {
@@ -240,22 +263,22 @@ const Map = ({ setReports ,setHighlighted}) => {
             return prevSize; // אם הגודל הגיע ל-160, לא לשנות אותו
           }
           return {
-            width: prevSize.width + 10, 
+            width: prevSize.width + 10,
             height: prevSize.height + 10,
           };
         });
       };
-  
+
       const initialTimer = setTimeout(() => {
         setSizeIncreasedOnce(true);
         increaseFireSize();
       }, 10000);
-  
+
       let intervalTimer;
       if (sizeIncreasedOnce) {
         intervalTimer = setInterval(increaseFireSize, 3000);
       }
-  
+
       return () => {
         clearTimeout(initialTimer);
         if (intervalTimer) {
@@ -263,7 +286,7 @@ const Map = ({ setReports ,setHighlighted}) => {
         }
       };
     }, [sizeIncreasedOnce]);
-  
+
     useEffect(() => {
       const updateFireIconSize = () => {
         const zoomLevel = map.getZoom();
@@ -286,7 +309,7 @@ const Map = ({ setReports ,setHighlighted}) => {
         const zoomLevel = map.getZoom();
         map.setView(firePosition, zoomLevel, { animate: true });
       };
-  
+
       map.on("zoom", () => {
         updateFireIconSize();
         focusOnFire();
@@ -326,6 +349,8 @@ const Map = ({ setReports ,setHighlighted}) => {
           </Marker>
         ))}
 
+
+
         {showParking && (
           <>
 
@@ -341,6 +366,7 @@ const Map = ({ setReports ,setHighlighted}) => {
               >
                 <Popup>{`חניה ${index + 1}`}</Popup>
               </Marker> */}
+
                 {selectedParkingCoords &&
                   <Polyline positions={routePoints.map(point => [point.lat, point.lng])} color="blue" weight={5} opacity={0.7} />}
               </>
@@ -348,8 +374,7 @@ const Map = ({ setReports ,setHighlighted}) => {
           </>
         )}
         <FireIcon />
-
-
+        <Taim handleClickZone={handleClickZone} taimList={taimList} />
         <MapClickHandler />
       </MapContainer>
     </div>
