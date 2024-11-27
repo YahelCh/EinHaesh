@@ -17,6 +17,11 @@
   flex-direction: column;
   overflow-y: auto;
   direction: rtl; /* שינוי כיוון הטקסט להודעות נכנסות */
+  scrollbar-width: none;
+}
+
+.reports-list::-webkit-scrollbar {
+  display: none; /* מסתיר סרגל בגלישה ב-Chrome/Edge */
 }
 
 .reports-title {
@@ -46,8 +51,10 @@
   white-space: pre-wrap;
   word-break: break-word;
   width: auto;
-  border: 2px solid #FFCC00; /* צבע הבועה */
+  /* border: 2px solid #FFCC00; צבע הבועה */
   margin-right: 10px;
+  border: 0.6px solid transparent; /* ברירת מחדל: בלי מסגרת */
+  transition: border-color 2s ease; /* מעבר הדרגתי של צבע המסגרת */
 }
 
 .chat-bubble.outgoing {
@@ -55,7 +62,7 @@
 }
 
 .chat-bubble:not(.transcription) {
-  border: 0.6px solid #FFCC00; /* צבע הגבול להודעות רגילות */
+  /* border: 0.6px solid #FFCC00; צבע הגבול להודעות רגילות */
 }
 
 .chat-bubble.transcription {
@@ -101,7 +108,7 @@ textarea {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 15px;
-  background-color: #333;
+  background-color: white;
   color: white;
   resize: none;
   margin-left: 10px;
@@ -173,4 +180,9 @@ button:hover {
 
 .time {
   margin-left: 10px;
+}
+
+
+.chat-bubble.highlight {
+  border-color:#FFCC00;
 }

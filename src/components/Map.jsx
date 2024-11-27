@@ -12,7 +12,7 @@ import parkingOption from '../assets/parking1.png';
 
 const bounds = [[0, 0], [700, 700]];
 
-const Map = ({ setReports }) => {
+const Map = ({ setReports ,setHighlighted}) => {
   const [activeAction, setActiveAction] = useState({});
   const [markers, setMarkers] = useState([]);
   const [showParking, setShowParking] = useState(false);
@@ -137,10 +137,17 @@ const Map = ({ setReports }) => {
           const timeSent = new Date().toLocaleString('he-IL', {
             timeStyle: 'short'
           });
+
+          const newReport= { id: Date.now(), text: activeAction.reportText, isRecording: false, time: timeSent }
+
           setReports((prevReports) => [
             ...prevReports,
-            { id: Date.now(), text: activeAction.reportText, isRecording: false, time: timeSent },
+         newReport  ,
+           
           ]);
+
+          setHighlighted(newReport.id)
+
           setMarkers((prevMarkers) => [...prevMarkers, { position: newMarker, icon }]);
         }
       }

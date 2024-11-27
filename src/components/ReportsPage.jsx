@@ -1,13 +1,15 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './ReportsPage.css';
 
-const ReportsPage = ({ reports, setReports }) => {
+const ReportsPage = ({ reports, setReports,highlighted, setHighlighted }) => {
   const [currentReport, setCurrentReport] = useState('');
   const [recording, setRecording] = useState(false);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const recognitionRef = useRef(null);
   const [currentTranscript, setCurrentTranscript] = useState('');
+  
+  const lastReportRef = useRef(null);
 
   const startRecording = () => {
     setRecording(true);
@@ -101,55 +103,76 @@ const ReportsPage = ({ reports, setReports }) => {
   const addReport = () => {
     if (currentReport.trim() !== '') {
       const timeSent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      setReports((prevReports) => [
-        ...prevReports,
-        {
-          id: Date.now(),
+      const newReportId = reports.length;
+      const newReport={
+         id: Date.now(),
           text: currentReport,
           isRecording: false,
           time: timeSent,
-        },
+      }
+      setHighlighted(newReport.id);
+  
+      // הסרת ההדגשה אחרי 2 שניות
+     
+
+      
+      setReports((prevReports) => [
+        ...prevReports,
+        newReport,
       ]);
       setCurrentReport('');
     }
   };
 
+useEffect(()=>{
+if(highlighted){
+  setTimeout(() => {
+    setHighlighted(null);
+  }, 2000);}
+  
+},[highlighted])
+
+useEffect(() => {
+  if (lastReportRef.current) {
+    lastReportRef.current.scrollIntoView({ behavior: "smooth" });
+  }
+}, [reports]);
+
   return (
     <div className="report-page">
       <div className="reports-title">עדכונים</div>
       <div className="reports-list">
-  {reports.map((report) => (
-    <React.Fragment key={report.id}>
-      {/* הצגת ההקלטה */}
-      {report.audioUrl && (
-        <div className="audio-container">
-          <audio controls src={report.audioUrl}></audio>
-          <div className="message-meta">
-            <span className="time">{report.time}</span>
+        {reports.map((report) => (
+          <div key={report.id}  ref={report.id === reports[reports.length - 1].id ? lastReportRef : null}>
+            {/* הצגת ההקלטה */}
+            {report.audioUrl && (
+              <div className="audio-container">
+                <audio controls src={report.audioUrl}></audio>
+                <div className="message-meta">
+                  <span className="time">{report.time}</span>
+                </div>
+              </div>
+            )}
+            {/* הצגת טקסט אם קיים */}
+            {report.text && (
+              <div
+                className={`chat-bubble ${report.isOutgoing ? 'outgoing' : ''
+                  } ${report.isTranscription ? 'transcription' : ''}  ${highlighted === report.id ? "highlight" : ""}`}
+              >
+                <p>{report.text}</p>
+                <div className="message-meta">
+                  <span className="time">{report.time}</span>
+                  {/* <span className="seen">{report.isSeen ? '✓✓' : ''}</span> */}
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      )}
-      {/* הצגת טקסט אם קיים */}
-      {report.text && (
-        <div
-          className={`chat-bubble ${
-            report.isOutgoing ? 'outgoing' : ''
-          } ${report.isTranscription ? 'transcription' : ''}`}
-        >
-          <p>{report.text}</p>
-          <div className="message-meta">
-            <span className="time">{report.time}</span>
-            {/* <span className="seen">{report.isSeen ? '✓✓' : ''}</span> */}
-          </div>
-        </div>
-      )}
-    </React.Fragment>
-  ))}
-</div>
+        ))}
+      </div>
 
 
       <div className="input-bar">
-        <textarea
+        <textarea className='textbox'
           value={currentReport}
           onChange={(e) => setCurrentReport(e.target.value)}
           placeholder="Type a message"

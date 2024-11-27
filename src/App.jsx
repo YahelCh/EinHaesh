@@ -16,6 +16,9 @@ function App() {
   const [isAppShown, setIsAppShown] = useState(true);
   const [loading, setLoading] = useState(false);
   const [reports, setReports] = useState([]);
+  const [highlighted, setHighlighted] = useState(null);
+
+
   const [fireFightingView, setFireFightingView] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -40,7 +43,7 @@ function App() {
 
 
         <div className="updates-wrapper">
-          <ReportsPage reports={reports} setReports={setReports} location={location} />
+          <ReportsPage reports={reports} setReports={setReports} highlighted={highlighted} setHighlighted={setHighlighted} location={location} />
         </div>
         <div className='center' >
           <div className='header'>
@@ -56,7 +59,7 @@ function App() {
 
           </div>
           <div className='map-wrapper'>
-            <Map fireFightingView={fireFightingView} reports={reports} setReports={setReports} ></Map>
+            <Map fireFightingView={fireFightingView} reports={reports} setReports={setReports} setHighlighted={setHighlighted} ></Map>
           </div>
         </div>
         {/* <div style={{ position: 'absolute' }} onClick={() => setFireFightingView(!fireFightingView)}>תכנן פעולות כב"ה</div> */}
