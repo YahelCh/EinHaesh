@@ -1,26 +1,34 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import alarmSound from '../assets/577314__trp__school-fire-alarm-loud-beep.flac';
 
 const FireAlarm = () => {
   const audioRef = useRef(null);
+  const [isAudioReady, setIsAudioReady] = useState(false);
 
-  useEffect(() => {
-    // הפעלת הסאונד כשהרכיב נטען
+  const handleUserInteraction = () => {
+    // שים לב שהמשתמש ביצע אינטראקציה כלשהי עם הדף
     const audio = audioRef.current;
     if (audio) {
-      audio.loop = true; // סאונד בלולאה
+      audio.loop = true; // הפעלת השמע בלולאה
       audio.play().catch((err) => console.error('Audio play error:', err));
+      setIsAudioReady(true);
     }
+  };
 
-    return () => {
-      // עצירת הסאונד כשהרכיב מתפרק
-      if (audio) {
-        audio.pause();
-      }
-    };
+  useEffect(() => {
+    handleUserInteraction()
   }, []);
 
-  return <audio ref={audioRef} src={alarmSound} />;
+  return (
+    <div>
+      {!isAudioReady && (
+        <div>
+          {/* <p>השעון יתחיל לפעול ברגע שתבצע פעולה כלשהי (כמו גלילה או לחיצה).</p> */}
+        </div>
+      )}
+      <audio ref={audioRef} src={alarmSound} />
+    </div>
+  );
 };
 
 export default FireAlarm;
