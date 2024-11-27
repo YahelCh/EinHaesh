@@ -39,14 +39,14 @@ const ActionsBar = ({ setActiveAction, activeAction, onParkingClick }) => {
             {actions.map(action => (
                 <div 
                     key={action.name}
-                    className='action' 
+                    className={`action ${activeAction.name === action.name?'active':'' }`}
                     onClick={() => {
                         if (action.name === 'parking') {
                             console.log('Parking action triggered'); 
                             onParkingClick(); 
-                        } else {
-                            setActiveAction(action); 
-                        }
+                            
+                        } 
+                        setActiveAction(action); 
                     }}
                 >
                     <img 

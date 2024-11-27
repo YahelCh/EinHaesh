@@ -91,21 +91,33 @@
 
 /* On hover or focus */
 .action:hover,
-.action:focus {
+.action:focus,
+.action:active  {
   border: 1px solid #FFCC00;
- fill:#FFCC00;
+  fill: #FFCC00;
   /* Lighter color */
 }
 
- /* path {
+/* path {
   fill: #FFCC00; 
 } */
 
 /* On active (click) */
-.action:active {
-  background-color: #6d6e6e;
-  /* Even lighter color */
-}
+.action.active {
+  border: 1px solid #FFCC00;
+  fill: #FFCC00;
+ }
+
+ .action-mark{
+  border-radius: 100px;
+  opacity: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #282A2D;
+  width:32px;
+  height:32px;
+ }
 
 .map-legend {
   position: absolute;
@@ -213,5 +225,6 @@
 }
 
 .rotated-image {
-  transform: rotate(-15deg); /* סיבוב התמונה */
+  transform: rotate(-15deg);
+  /* סיבוב התמונה */
 }
