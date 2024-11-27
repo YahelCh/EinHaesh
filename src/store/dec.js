@@ -1,6 +1,6 @@
 export const TaimLst = [
     {
-        id: 1, numAgaf: 1, desc: " אגף 1", color: 'red', numAsirim: 10,
+        id: 1, numAgaf: 1, desc: " תא 1", color: 'transparent', numAsirim: 10,
         points: [{ lat: 231.2294684094884, lng: 267.24143903685615 }
             , { lat: 231.2294684094884, lng: 311.59375887330344 }
             , { lat: 181.7237259539931, lng: 311.59375887330344 }
@@ -11,7 +11,7 @@ export const TaimLst = [
     },
 
     {
-        id: 2, numAgaf: 2, desc: " אגף 2", color: 'red', numAsirim: 20,
+        id: 2, numAgaf: 2, desc: " תא 2", color: 'transparent', numAsirim: 20,
         points: [{ lat: 231.2294684094884, lng: 311.59375887330344 }
             , { lat: 231.2294684094884, lng: 358.02303857111553 }
             , { lat: 173.22258250751088, lng: 358.02303857111553 }

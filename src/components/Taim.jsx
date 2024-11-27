@@ -34,10 +34,11 @@ const Label = ({ zone }) => {
 
   const point = map.latLngToLayerPoint(centroid); // ממיר קואורדינטות למיקום על המסך
 
-  const asir = ' אסירים ' + zone.numAsirim
+  const asir = `(${zone.numAsirim})`
 
   const style = {
     position: 'absolute',
+    color:'#363636',
     top: point.y,
     left: point.x,
     transform: 'translate(-50%, -50%)',
