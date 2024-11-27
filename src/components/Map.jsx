@@ -301,7 +301,7 @@ const Map = ({ setReports }) => {
 
 
   return (
-    <>
+    <div className='map'>
       <ActionsBar activeAction={activeAction} setActiveAction={setActiveAction} onParkingClick={handleParkingClick} />
 
       <MapContainer
@@ -347,7 +347,7 @@ const Map = ({ setReports }) => {
 
         <MapClickHandler />
       </MapContainer>
-    </>
+    </div>
   );
 };
 
