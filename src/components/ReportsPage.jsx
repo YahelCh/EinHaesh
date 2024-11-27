@@ -170,13 +170,13 @@ useEffect(() => {
         ))}
       </div>
 
-
       <div className="input-bar">
-        <textarea className='textbox'
+        <input className='textbox' type={'text'}   onChange={(e) => setCurrentReport(e.target.value)}
+          placeholder="Type a message"/>
+        {/* <textarea className='textbox'
           value={currentReport}
-          onChange={(e) => setCurrentReport(e.target.value)}
-          placeholder="Type a message"
-        />
+        
+        /> */}
         {currentReport && (
           <button onClick={addReport} className="send-button">
             ➤
@@ -184,9 +184,9 @@ useEffect(() => {
         )}
         <button
           onClick={recording ? stopRecording : startRecording}
-          className={`record-button ${recording ? 'active' : ''}`}
+          className={`record-button ${recording ? 'active' : 'inactive'}`}
         >
-          {recording ? '⏹' : '🎙️'}
+          {recording ? '⏹' : ''}
         </button>
       </div>
     </div>
