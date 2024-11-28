@@ -1,8 +1,8 @@
-.main {
-  display: flex;
-  width: 100vw;
-  height: 100vh;
-  flex-direction: row-reverse;
+
+
+@font-face {
+  font-family: ploni;
+  src: url("./assets/fonts/ploni-round/ploni-round-regular-aaa.otf") format("opentype");
 }
 
 .updates-wrapper {
@@ -10,6 +10,14 @@
   flex: 1.2;
   color: white;
   /* background-image: url('./assets/updates.png'); */
+}
+
+.main {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: row-reverse;
+  font-family: ploni;
 }
 
 .center {
@@ -29,11 +37,12 @@
   height: 100%;
   display: flex;
   justify-content: space-around;
-  gap:10px;
+  gap: 10px;
   /* border-radius: 10px; */
   /* position: relative; */
 
 }
+
 .leaflet-container {
   width: 100%;
   height: 100%;
@@ -58,7 +67,7 @@
 
 .actions-bar {
   /* background: #282A2D; */
-  width: 400px;
+  width: 300px;
   height: 48px;
   display: flex;
   border-radius: 16px;
@@ -72,6 +81,20 @@
   margin-top: 1px;
   align-items: center;
 
+}
+
+.button-cabah {
+  border-radius: 16px;
+  height: 48px;
+  background-color: #282A2D;
+  position: absolute;
+  top: 10px;
+  left: 1%;
+  width: 170px;
+  display: flex;
+  align-items: center;
+  color: white;
+  justify-content: center;
 }
 
 .action-icon {
@@ -153,6 +176,10 @@
   ;
 }
 
+.leaflet-container {
+  background-color: white !important;
+}
+
 .dot {
   width: 10px;
   height: 10px;
@@ -173,7 +200,7 @@
   width: max-content;
   color: white;
   font-size: 24px;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 .fire-icon {

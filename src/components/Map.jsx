@@ -11,11 +11,12 @@ import MapLegend from './MapLegend';
 import fireIconImg from '../assets/fire-icon.svg';
 import parkingOption from '../assets/parking1.png';
 import Taim from './Taim';
+import PlaningOperations from './PlaningOperations'
 import { TaimLst } from '../store/dec'
 
 const bounds = [[0, 0], [700, 700]];
 
-const Map = ({ setReports ,setHighlighted}) => {
+const Map = ({ setReports, setHighlighted }) => {
   const [activeAction, setActiveAction] = useState({});
   const [markers, setMarkers] = useState([]);
   const [showParking, setShowParking] = useState(false);
@@ -142,12 +143,12 @@ const Map = ({ setReports ,setHighlighted}) => {
             timeStyle: 'short'
           });
 
-          const newReport= { id: Date.now(), text: activeAction.reportText, isRecording: false, time: timeSent }
+          const newReport = { id: Date.now(), text: activeAction.reportText, isRecording: false, time: timeSent }
 
           setReports((prevReports) => [
             ...prevReports,
-         newReport  ,
-           
+            newReport,
+
           ]);
 
           setHighlighted(newReport.id)
@@ -334,15 +335,17 @@ const Map = ({ setReports ,setHighlighted}) => {
   return (
     <div className='map'>
       <ActionsBar activeAction={activeAction} setActiveAction={setActiveAction} onParkingClick={handleParkingClick} />
-
+      <PlaningOperations onParkingClick={handleParkingClick} />
       <MapContainer
         center={[350, 350]}
         zoom={-1}
-        style={{position:'absolute',bottom:'0', height: "90%", width: "100%", borderRadius: '10px' }}
+        maxBounds={bounds}
+        maxBoundsViscosity={0.8}
+        style={{ position: 'absolute', bottom: '0', height: "90%", width: "100%", borderRadius: '10px' }}
         crs={L.CRS.Simple}
         ref={mapRef}
       >
-        <BaseMap/>
+        <BaseMap />
         {markers.map((marker, index) => (
           <Marker key={index} {...marker}>
 

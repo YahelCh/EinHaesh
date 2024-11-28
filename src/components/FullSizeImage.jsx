@@ -10,10 +10,10 @@ const BaseMap = ({ }) => {
   const bounds = map.getBounds();
 
   // המרת bounds לפורמט המתאים ל-ImageOverlay
-  const imageBounds = [
-    [bounds.getSouthWest().lat, bounds.getSouthWest().lng],
-    [bounds.getNorthEast().lat, bounds.getNorthEast().lng],
-  ];
+  const imageBounds = [[0,0],[650,720]]
+  //   [bounds.getSouthWest().lat, bounds.getSouthWest().lng],
+  //   [bounds.getNorthEast().lat, bounds.getNorthEast().lng],
+  // ];
 
   return (
     <ImageOverlay

@@ -21,20 +21,19 @@ import pinuy from '../assets/actions_icons/pinuy.png';
 const ActionsBar = ({ setActiveAction, activeAction, onParkingClick }) => {
     const actions = [
         { name: 'shalter', icon: iconShalter, activeIcon: iconShalterActive, reportText: 'הורדת שאלטר מערבי אגף 8' },
-        { name: 'fire', icon: iconFire, activeIcon: iconFireActive, reportText: 'מוקד בעירה נוסף מסדרון' },
         { name: 'trapped', icon: iconTrapped, activeIcon: iconTrappedActive, reportText: 'דיווח על לכודים תא 12' },
         { name: 'smoke', icon: iconSmoke, activeIcon: iconSmokeActive, reportText: 'עשן חדר אוכל ותאים 2,3,4' },
         { name: 'gas', icon: gasTapIcon, activeIcon: gasTapIconActive, reportText: 'סגירת ברז גז' },
         { name: 'fireCabinet', icon: fireCabinetIcon, activeIcon: fireCabinetIconActive, reportText: 'ארון כיבוי' },
         { name: 'pinuy', icon: pinuy, activeIcon: pinuyActive, reportText: 'פינוי אסירים' },
 
-        { 
-            name: 'parking', 
-            icon: iconParking, 
-            activeIcon: iconParking, 
-            reportText: 'מיקומי חניות הוצגו על המפה',
-            onClick: onParkingClick // הוספת פונקציה ללחיצה על כפתור החניה
-        }
+        // { 
+        //     name: 'parking', 
+        //     icon: iconParking, 
+        //     activeIcon: iconParking, 
+        //     reportText: 'מיקומי חניות הוצגו על המפה',
+        //     onClick: onParkingClick // הוספת פונקציה ללחיצה על כפתור החניה
+        // }
     ];
 
     return (
