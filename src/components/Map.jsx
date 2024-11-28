@@ -15,10 +15,11 @@ import ParkingLegendMark from './ParkingLegendMark'
 import parkingOption from '../assets/parking1.png';
 import Taim from './Taim';
 import { TaimLst } from '../store/dec'
+import AlertWithToastify from './Alerts';
 
 const bounds = [[0, 0], [700, 700]];
 
-const Map = ({ setReports, setHighlighted }) => {
+const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
   const [activeAction, setActiveAction] = useState({});
   const [markers, setMarkers] = useState([]);
   const [showParking, setShowParking] = useState(false);
@@ -216,9 +217,9 @@ const Map = ({ setReports, setHighlighted }) => {
   const parkingRoutes = {
     parking1: [
       { lat: 568.88, lng: 430.64 }, // חניה 1
-      {lat: 503.0883480794362, lng: 537.2487562189054},  // עיקול 1
-      {lat: 427.12579532552115, lng: 474.26231438228706},  // עיקול 2
-      {lat: 520.08489899098095, lng: 371.2844809033711},  // עיקול 3
+      { lat: 503.0883480794362, lng: 537.2487562189054 },  // עיקול 1
+      { lat: 427.12579532552115, lng: 474.26231438228706 },  // עיקול 2
+      { lat: 520.08489899098095, lng: 371.2844809033711 },  // עיקול 3
       fireCoords,                  // סיום
     ],
     parking2: [
@@ -229,9 +230,9 @@ const Map = ({ setReports, setHighlighted }) => {
     ],
     parking3: [
       { lat: 434.45, lng: 556.7 }, // חניה 3
-      {lat: 503.0883480794362, lng: 537.2487562189054},  // עיקול 1
-      {lat: 427.12579532552115, lng: 474.26231438228706},  // עיקול 2
-      {lat: 520.08489899098095, lng: 371.2844809033711},  // עיקול 3
+      { lat: 503.0883480794362, lng: 537.2487562189054 },  // עיקול 1
+      { lat: 427.12579532552115, lng: 474.26231438228706 },  // עיקול 2
+      { lat: 520.08489899098095, lng: 371.2844809033711 },  // עיקול 3
 
       fireCoords,                  // סיום
     ],
@@ -341,7 +342,7 @@ const Map = ({ setReports, setHighlighted }) => {
         crs={L.CRS.Simple}
         ref={mapRef}
       >
-        <BaseMap />
+        {!isWaringOpoup && <AlertWithToastify />}        <BaseMap />
         {markers.map((marker, index) => (
           <Marker key={index} {...marker}>
 
@@ -349,8 +350,6 @@ const Map = ({ setReports, setHighlighted }) => {
         ))}
 
         <ParkingLegendMark handleParkingClick={() => setShowParking(prev => !prev)} />
-
-
 
         {showParking && (
           <>

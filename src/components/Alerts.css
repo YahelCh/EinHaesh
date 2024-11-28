@@ -1,0 +1,9 @@
+.Toastify__toast-theme--light {
+  background: black;
+  border: 1px solid #f1c40f;
+  border-radius: 16px;
+  color: #f1c40f;
+  font-size: 20px;
+  text-align: right;
+  width: auto;
+}
