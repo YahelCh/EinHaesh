@@ -61,6 +61,8 @@
 .warning-popup {
   background-image: url('./assets/Warning pop-up.png');
   position: absolute;
+  background-repeat: no-repeat;
+  background-size: contain;
   width: 636px;
   height: 401px;
 }
@@ -293,8 +295,8 @@
   width: 78px;
   height: 91px;
   position: absolute;
-  left: 313px;
-  top: 424px;
+  left: 26.5%;
+  top: 52%;
   transition: transform 0.2s;
 }
 
@@ -319,5 +321,6 @@
   height: 5%;
   padding: 10px;
   width: 100%;
-  justify-content: center;
+  gap:5px;
+  justify-content: space-between;
 }

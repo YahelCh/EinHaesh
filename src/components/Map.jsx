@@ -249,7 +249,7 @@ const Map = ({ setReports, setHighlighted }) => {
   };
   const FireIcon = () => {
     const map = useMap();
-    const [fireIconSize, setFireIconSize] = useState({ width: 50, height: 50 });
+    const [fireIconSize, setFireIconSize] = useState({ width: 30, height: 30 });
     const [sizeIncreasedOnce, setSizeIncreasedOnce] = useState(false);
     // const firePosition = [500.1097758661681, 177.9148148148148];
 

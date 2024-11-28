@@ -3,6 +3,7 @@ import './App.css';
 import Map from './components/Map';
 import ReportsPage from './components/ReportsPage';
 import fireIcon from './assets/fire-icon.svg';
+import logoShabas from './assets/logoShabas.png';
 import FireAlarm from './components/FireAlarm'
 import appIcon from './assets/apppp.png'
 import appBoard from './assets/app-icon.png'
@@ -53,15 +54,23 @@ function App() {
         </div>
         <div className='center' >
           <div className='header'>
-            <div style={{ display: 'flex', flex: '1', alignItems: 'center', gap: '10px' }}>
-              <div class="">
-                <img src={fireIcon} alt="Fire Icon" width="50" height="50" />
+
+            <div style={{ width: '20%', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div class="" style={{
+                padding: '5px',
+                paddingTop: '14px'
+              }}              >
+                <img src={fireIcon} alt="Fire Icon" width="30" height="30" />
               </div>
+
+              <Timer />
               <FireAlarm />
 
-              <div className='title'>עין האש</div>
+
             </div>
-            <Timer />
+            <div>
+              <img style={{marginRight:'10px'}} src={logoShabas} alt="logo shabas" width="30" height="30" />
+            </div>
 
           </div>
           <div className='map-wrapper'>
@@ -80,7 +89,7 @@ function App() {
 
         {isAppShown ? <div onClick={appClick}><img style={{ width: '100vw', height: '100vh' }} src={appBoard}></img>
           <img className={`appIcon ${isAnimating ? 'animate' : ''}`} src={appIcon}></img>
-         
+
         </div> :
           (
             isWaringOpoup &&
