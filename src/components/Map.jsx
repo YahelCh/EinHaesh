@@ -9,6 +9,8 @@ import { EditControl } from 'react-leaflet-draw';
 import ActionsBar from './ActionsBar';
 import MapLegend from './MapLegend';
 import fireIconImg from '../assets/fire-icon.svg';
+import parkingSignIcon from '../assets/blabla.png';
+
 import parkingOption from '../assets/parking1.png';
 import Taim from './Taim';
 import PlaningOperations from './PlaningOperations'
@@ -158,6 +160,21 @@ const Map = ({ setReports, setHighlighted }) => {
       }
     });
   };
+
+  const ParkingSign = () => {
+    const parkingSign = L.divIcon({
+      className: "custom",
+      html: `<div ><img src="${parkingSignIcon}" style=" height: 40px;, width:20px;"  /></div>`, // חניה שמאלית למטה
+      iconSize: [32, 32],
+      iconAnchor: [20, 20],
+      popupAnchor: [0, -32]
+    })
+
+    const position = [240, 48]
+    return <Marker position={position} icon={parkingSign} eventHandlers={{
+      click: () => handleParkingClick(), // הצגת חניות
+    }}></Marker>
+  }
 
   const handleParkingClick = () => {
     setShowParking(prevState => !prevState);
@@ -335,7 +352,6 @@ const Map = ({ setReports, setHighlighted }) => {
   return (
     <div className='map'>
       <ActionsBar activeAction={activeAction} setActiveAction={setActiveAction} onParkingClick={handleParkingClick} />
-      <PlaningOperations onParkingClick={handleParkingClick} />
       <MapContainer
         center={[350, 350]}
         zoom={-1}
@@ -351,6 +367,8 @@ const Map = ({ setReports, setHighlighted }) => {
 
           </Marker>
         ))}
+
+        <ParkingSign />
 
 
 
