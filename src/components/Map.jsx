@@ -70,7 +70,7 @@ const Map = ({ setReports, setHighlighted }) => {
       }),
       parkingIcon1: L.divIcon({
         className: "custom-icon",
-        html: `<img src="${parkingOption}" style=" height: ${iconSize}px; " />`, //  החניות הימניות 2
+        html: `<img src="${parkingOption}" style=" height: ${iconSize}px;transform: rotate(-4deg) scale(1) " />`, //  החניות הימניות 2
         iconSize: [iconSize, iconSize],
         iconAnchor: iconAnchor,
       }),
@@ -82,7 +82,7 @@ const Map = ({ setReports, setHighlighted }) => {
       }),
       parkingIcon3: L.divIcon({
         className: "custom-icon",
-        html: `<img src="${parkingOption}" style=" height: ${iconSize}px; " />`, //  החניות הימניות 2
+        html: `<img src="${parkingOption}" style=" height: ${iconSize}px; rotate(-4deg) scale(1)" />`, //  החניות הימניות 2
         iconSize: [iconSize, iconSize],
         iconAnchor: iconAnchor,
       }),
@@ -112,9 +112,11 @@ const Map = ({ setReports, setHighlighted }) => {
 
   // הגדרת נקודות החניות
   const parkingPoints = [
-    { lat: 568.88, lng: 430.64, icon: 'parkingIcon1' },
-    { lat: 635.85, lng: 86.92, icon: 'parkingIcon0' },
-    { lat: 434.45, lng: 556.7, icon: 'parkingIcon3' },
+    { lat: 530.73, lng: 455.39, icon: 'parkingIcon1' },
+    { lat: 590.76, lng: 91.39, icon: 'parkingIcon0' },
+    // { lat: 434.45, lng: 556.7, icon: 'parkingIcon3' },
+    { lat: 410.09, lng: 572.32, icon: 'parkingIcon3' },
+
     { lat: 168.99, lng: 64.50, icon: 'parkingIcon4' },
     { lat: 64.63, lng: 306.05, icon: 'parkingIcon2' },
   ];
@@ -215,30 +217,33 @@ const Map = ({ setReports, setHighlighted }) => {
   // הגדרת נקודות המסלול (נקודת התחלה + עיקולים + נקודת סיום)
   const parkingRoutes = {
     parking1: [
-      { lat: 568.88, lng: 430.64 }, // חניה 1
+      { lat: 530.73, lng: 455.39 }, // חניה 1
       {lat: 503.0883480794362, lng: 537.2487562189054},  // עיקול 1
       {lat: 427.12579532552115, lng: 474.26231438228706},  // עיקול 2
       {lat: 520.08489899098095, lng: 371.2844809033711},  // עיקול 3
+      {lat: 520.08489899098095, lng: 208.2844809033711},  // עיקול 4
+
       fireCoords,                  // סיום
     ],
     parking2: [
-      { lat: 635.85, lng: 86.92 }, // חניה 2
-      { lat: 635.85, lng: 172.26425925925926 },  // עיקול 1
+      { lat: 590.76, lng: 91.39 }, // חניה 2
+      { lat: 590.85, lng: 172.26425925925926 },  // עיקול 1
 
       fireCoords,                  // סיום
     ],
     parking3: [
-      { lat: 434.45, lng: 556.7 }, // חניה 3
+      // { lat: 434.45, lng: 556.7 }, // חניה 3
+    { lat: 410.09, lng: 572.32},
       {lat: 503.0883480794362, lng: 537.2487562189054},  // עיקול 1
       {lat: 427.12579532552115, lng: 474.26231438228706},  // עיקול 2
       {lat: 520.08489899098095, lng: 371.2844809033711},  // עיקול 3
-
+      {lat: 520.08489899098095, lng: 208.2844809033711},  // עיקול 4
       fireCoords,                  // סיום
     ],
     parking4: [
       { lat: 168.99, lng: 64.50 }, // חניה 4
-      { lat: 220.071951931182, lng: 64.50 },  // עיקול 1
-      { lat: 220.0742213672812, lng: 175.9138271604938 },  // עיקול 2
+      { lat: 205.071951931182, lng: 64.50 },  // עיקול 1
+      { lat: 205.0742213672812, lng: 175.9138271604938 },  // עיקול 2
       fireCoords,                  // סיום
     ],
     parking5: [
