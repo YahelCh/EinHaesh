@@ -1,9 +1,10 @@
 import { useMap,ImageOverlay } from 'react-leaflet';
 import basePlan from '../assets/mapmap.png';
+import mapZoom from '../assets/mapZoom.png';
 
 
 
-const BaseMap = ({ }) => {
+const BaseMap = ({zoomMap }) => {
   const map = useMap();
 
   // קבלת גבולות המפה (bounds)
@@ -17,7 +18,7 @@ const BaseMap = ({ }) => {
 
   return (
     <ImageOverlay
-      url={basePlan}
+      url={zoomMap?mapZoom:basePlan}
       bounds={imageBounds}
     />
   );
