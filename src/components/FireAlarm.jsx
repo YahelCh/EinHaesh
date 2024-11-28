@@ -12,6 +12,9 @@ const FireAlarm = () => {
       audio.loop = true; // הפעלת השמע בלולאה
       audio.play().catch((err) => console.error('Audio play error:', err));
       setIsAudioReady(true);
+    setTimeout(() => {
+      audio.pause();
+    }, 5000);
     }
   };
 

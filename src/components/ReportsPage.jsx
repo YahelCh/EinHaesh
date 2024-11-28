@@ -11,6 +11,31 @@ const ReportsPage = ({ reports, setReports,highlighted, setHighlighted }) => {
   
   const lastReportRef = useRef(null);
 
+  const allReports = [
+
+    // רשימת הדיווחים
+   "דיווח ארוע לפיד בוער רמה 4" ,
+   'כוחות כב"ה בדרך',
+   "דלת ראשית חדר אוכל יצאה משימוש" ,
+   "2 פצועים לפינוי" ,
+   'כוחות מד"א בדרך'
+  ];
+  
+  useEffect(() => {
+    addReport( allReports[0])
+
+    let index = 1; // אינדקס לדיווח הבא
+    const interval = setInterval(() => {
+      if (index < allReports.length) {
+        addReport( allReports[index])
+        index++;
+      } else {
+        clearInterval(interval); // עצירת הטיימר אם סיימנו לדחוף הכל
+      }
+    }, 3000); // כל 3 שניות
+    return () => clearInterval(interval); // ניקוי הטיימר
+  }, []); 
+
   const startRecording = () => {
     setRecording(true);
     audioChunksRef.current = [];
@@ -100,13 +125,13 @@ const ReportsPage = ({ reports, setReports,highlighted, setHighlighted }) => {
     });
   };
 
-  const addReport = () => {
-    if (currentReport.trim() !== '') {
+  const addReport = (content) => {
+    if (content.trim() !== '') {
       const timeSent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const newReportId = reports.length;
       const newReport={
          id: Date.now(),
-          text: currentReport,
+          text: content,
           isRecording: false,
           time: timeSent,
       }
@@ -178,7 +203,7 @@ useEffect(() => {
         
         /> */}
         {currentReport && (
-          <button onClick={addReport} className="send-button">
+          <button onClick={()=>addReport(currentReport)} className="send-button">
             ➤
           </button>
         )}
