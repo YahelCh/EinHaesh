@@ -20,26 +20,32 @@ function App() {
 
 
   const [fireFightingView, setFireFightingView] = useState(false)
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => setIsAnimating(true), 100);
-    setTimeout(() => setIsAnimating(false), 800); // משך האנימציה
+    // setTimeout(() => setIsAnimating(true), 100);
+    // setTimeout(() => setIsAnimating(false), 800); // משך האנימציה
 
-    setTimeout(() => {
-      if (isAppShown) {
-        setIsAppShown(false);
+    // setTimeout(() => {
+    //   if (isAppShown) {
+    //     setIsAppShown(false);
 
-        setIsWaringOpoup(true);
+    //     setIsWaringOpoup(true);
 
-      }
-    }, 2000);
+    //   }
+    // }, 2000);
   }, []
   )
 
+  const appClick = () => {
+    setIsAppShown(false);
+
+    setIsWaringOpoup(true);
+  }
+
   return (
     <>
-      {!(isAppShown || loading) && <div className='main'>
+      {!(isAppShown) && <div className='main'>
 
 
         <div className="updates-wrapper">
@@ -47,7 +53,7 @@ function App() {
         </div>
         <div className='center' >
           <div className='header'>
-            <div style={{display:'flex',flex:'1', alignItems: 'center',  gap: '10px'}}>
+            <div style={{ display: 'flex', flex: '1', alignItems: 'center', gap: '10px' }}>
               <div class="">
                 <img src={fireIcon} alt="Fire Icon" width="50" height="50" />
               </div>
@@ -70,17 +76,18 @@ function App() {
 
 
       </div >}
-      {(isAppShown || loading || isWaringOpoup) && <div className="modal">
-        {isAppShown ? <div><img style={{ width: '100%', height: '100%' }} src={appBoard}></img>
+      {(isAppShown || isWaringOpoup) && <div className="modal">
+
+        {isAppShown ? <div onClick={appClick}><img style={{ width: '100vw', height: '100vh' }} src={appBoard}></img>
           <img className={`appIcon ${isAnimating ? 'animate' : ''}`} src={appIcon}></img>
+         
         </div> :
-          (loading ?
-            <img src={loadingimg} style={{ width: '100%', height: '100%' }} ></img> :
-            (isWaringOpoup &&
-              <div className='warning-popup' onClick={() => {
-                console.log('dasdad');
-                setIsWaringOpoup(false)
-              }}></div>))}
+          (
+            isWaringOpoup &&
+            <div className='warning-popup' onClick={() => {
+              console.log('dasdad');
+              setIsWaringOpoup(false)
+            }}></div>)}
 
       </div>}
 
