@@ -9,11 +9,11 @@ import { EditControl } from 'react-leaflet-draw';
 import ActionsBar from './ActionsBar';
 import MapLegend from './MapLegend';
 import fireIconImg from '../assets/fire-icon.svg';
-import parkingSignIcon from '../assets/blabla.png';
+
+import ParkingLegendMark from './ParkingLegendMark'
 
 import parkingOption from '../assets/parking1.png';
 import Taim from './Taim';
-import PlaningOperations from './PlaningOperations'
 import { TaimLst } from '../store/dec'
 
 const bounds = [[0, 0], [700, 700]];
@@ -161,27 +161,7 @@ const Map = ({ setReports, setHighlighted }) => {
     });
   };
 
-  const ParkingSign = () => {
-    const parkingSign = L.divIcon({
-      className: "custom",
-      html: `<div ><img src="${parkingSignIcon}" style=" height: 40px;, width:20px;"  /></div>`, // חניה שמאלית למטה
-      iconSize: [32, 32],
-      iconAnchor: [20, 20],
-      popupAnchor: [0, -32]
-    })
-
-    const position = [240, 48]
-    return <Marker position={position} icon={parkingSign} eventHandlers={{
-      click: () => handleParkingClick(), // הצגת חניות
-    }}></Marker>
-  }
-
-  const handleParkingClick = () => {
-    setShowParking(prevState => !prevState);
-
-  };
-
-  const fireCoords = { lat: 570.11, lng: 177.91 }; // הנקודה של האש 
+  const fireCoords = { lat: 510.11, lng: 177.91 }; // הנקודה של האש 
 
   const handleOnClickOnParking = (parkingName) => {
     console.log(`Clicked on: ${parkingName}`); // בדיקה: הדפסת שם החניה
@@ -236,9 +216,9 @@ const Map = ({ setReports, setHighlighted }) => {
   const parkingRoutes = {
     parking1: [
       { lat: 568.88, lng: 430.64 }, // חניה 1
-      { lat: 517.1040482417274, lng: 502.0748148148148 },  // עיקול 1
-      { lat: 468.0987528908293, lng: 453.0506172839506 },  // עיקול 2
-      { lat: 558.10847904554, lng: 366.0076543209876 },  // עיקול 3
+      {lat: 503.0883480794362, lng: 537.2487562189054},  // עיקול 1
+      {lat: 427.12579532552115, lng: 474.26231438228706},  // עיקול 2
+      {lat: 520.08489899098095, lng: 371.2844809033711},  // עיקול 3
       fireCoords,                  // סיום
     ],
     parking2: [
@@ -249,9 +229,9 @@ const Map = ({ setReports, setHighlighted }) => {
     ],
     parking3: [
       { lat: 434.45, lng: 556.7 }, // חניה 3
-      { lat: 538.1063176778265, lng: 531.0891358024692 },  // עיקול 1
-      { lat: 468.0987528908293, lng: 453.0506172839506 },  // עיקול 2
-      { lat: 558.10847904554, lng: 366.0076543209876 },  // עיקול 3
+      {lat: 503.0883480794362, lng: 537.2487562189054},  // עיקול 1
+      {lat: 427.12579532552115, lng: 474.26231438228706},  // עיקול 2
+      {lat: 520.08489899098095, lng: 371.2844809033711},  // עיקול 3
 
       fireCoords,                  // סיום
     ],
@@ -271,7 +251,7 @@ const Map = ({ setReports, setHighlighted }) => {
     const map = useMap();
     const [fireIconSize, setFireIconSize] = useState({ width: 50, height: 50 });
     const [sizeIncreasedOnce, setSizeIncreasedOnce] = useState(false);
-    const firePosition = [570.1097758661681, 177.9148148148148];
+    // const firePosition = [500.1097758661681, 177.9148148148148];
 
     useEffect(() => {
       // פונקציה שמגדילה את גודל האש כל 3 שניות אחרי שהגדלנו פעם ראשונה
@@ -345,13 +325,13 @@ const Map = ({ setReports, setHighlighted }) => {
       iconAnchor: [fireIconSize.width / 2, fireIconSize.height / 2],
     });
 
-    return <Marker position={firePosition} icon={fireIcon} />;
+    return <Marker position={fireCoords} icon={fireIcon} />;
   };
 
 
   return (
     <div className='map'>
-      <ActionsBar activeAction={activeAction} setActiveAction={setActiveAction} onParkingClick={handleParkingClick} />
+      <ActionsBar activeAction={activeAction} setActiveAction={setActiveAction} />
       <MapContainer
         center={[350, 350]}
         zoom={-1}
@@ -368,7 +348,7 @@ const Map = ({ setReports, setHighlighted }) => {
           </Marker>
         ))}
 
-        <ParkingSign />
+        <ParkingLegendMark handleParkingClick={() => setShowParking(prev => !prev)} />
 
 
 
