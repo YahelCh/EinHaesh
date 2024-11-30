@@ -27,13 +27,7 @@ const ActionsBar = ({ setActiveAction, activeAction, onParkingClick }) => {
         { name: 'fireCabinet', icon: fireCabinetIcon, activeIcon: fireCabinetIconActive, reportText: 'ארון כיבוי' },
         { name: 'pinuy', icon: pinuy, activeIcon: pinuyActive, reportText: 'פינוי אסירים' },
 
-        // { 
-        //     name: 'parking', 
-        //     icon: iconParking, 
-        //     activeIcon: iconParking, 
-        //     reportText: 'מיקומי חניות הוצגו על המפה',
-        //     onClick: onParkingClick // הוספת פונקציה ללחיצה על כפתור החניה
-        // }
+
     ];
 
     return (

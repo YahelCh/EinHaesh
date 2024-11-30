@@ -128,14 +128,7 @@ const Map = ({ setReports, setHighlighted }) => {
         if (activeAction && activeAction.activeIcon) {
           const newMarker = event.latlng;
           console.log(event.latlng);
-
-          // const icon = L.icon({
-          //   iconUrl: activeAction.activeIcon,
-          //   iconSize: [32, 32],
-          //   iconAnchor: [16, 32],
-          //   popupAnchor: [0, -32],
-          // });
-
+    
           const icon = L.divIcon({
             className: "custom",
             html: `<div class="action-mark"><img src="${activeAction.activeIcon}" style=" height: 20px;, width:20px;"  /></div>`, // חניה שמאלית למטה
@@ -402,6 +395,7 @@ const Map = ({ setReports, setHighlighted }) => {
       <ActionsBar activeAction={activeAction} setActiveAction={setActiveAction} />
       <MapContainer
         center={[350, 350]}
+        zoomControl={false}
         zoom={-1}
         maxBounds={bounds}
         maxBoundsViscosity={0.8}
