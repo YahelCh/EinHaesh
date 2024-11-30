@@ -467,7 +467,7 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
         {popupMessage && <PopupMessage message={popupMessage} onClose={handleClosePopup} />}
   
       
-        <Taim handleClickZone={handleClickZone} taimList={taimList} />
+        {/* <Taim handleClickZone={handleClickZone} taimList={taimList} /> */}
         <MapClickHandler />
       </MapContainer>
     </div>

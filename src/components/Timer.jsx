@@ -20,7 +20,7 @@ const Timer = () => {
   };
 
   return (
-    <div style={{color:'white', fontSize: '24px', fontFamily: 'monospace', textAlign: 'end' }}>
+    <div style={{color:'white', fontSize: '18px', fontFamily: 'monospace', textAlign: 'end' }}>
       {formatTime(seconds)}
     </div>
   );

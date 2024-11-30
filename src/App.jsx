@@ -56,6 +56,9 @@ function App() {
           <div className='header'>
 
             <div style={{ width: '20%', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              {/* <div> */}
+                <img style={{ marginLeft: '10px' }} src={logoShabas} alt="logo shabas" width="60" height="30" />
+              {/* </div> */}
               <div class="" style={{
                 padding: '5px',
                 paddingTop: '14px'
@@ -68,9 +71,7 @@ function App() {
 
 
             </div>
-            <div>
-              <img style={{ marginRight: '10px' }} src={logoShabas} alt="logo shabas" width="30" height="30" />
-            </div>
+
 
           </div>
           <div className='map-wrapper'>
