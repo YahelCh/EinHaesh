@@ -167,12 +167,14 @@ const Map = ({ setReports, setHighlighted }) => {
   const fireCoords = { lat: 510.11, lng: 177.91 }; // הנקודה של האש 
   const [activeMessage, setActiveMessage] = useState(null)
   const [popupMessage, setPopupMessage] = useState(""); 
+
   const handleOnClickOnParking = (parkingName) => {
     console.log(`Clicked on: ${parkingName}`);
     const route = parkingRoutes[parkingName];
-    setActiveMessage(parkingMessages[parkingName]);
-    setPopupMessage(parkingMessages[parkingName]);
 
+    const { message, arrow } = parkingMessages[parkingName]; // נשלוף גם את ההודעה וגם את סוג החץ
+    setActiveMessage(message);
+    setPopupMessage({ message, arrow }); 
 
     if (activeRoute === parkingName) {
       setActiveRoute(null);
@@ -260,12 +262,13 @@ const Map = ({ setReports, setHighlighted }) => {
     ],
   };
   const parkingMessages = {
-    parking1: 'לך 100 מטר לכיוון מקור השריפה, 3 דלתות ושער 1 בדרך',
-    parking2: 'לך 200 מטר לכיוון מקור השריפה, 2 דלתות ושער 1 בדרך',
-    parking3: 'לך 400 מטר לכיוון מקור השריפה, 4 דלתות ושער 1 בדרך',
-    parking4: 'לך 300 מטר לכיוון מקור השריפה, 3 דלתות ושער 1 בדרך',
-    parking5: 'לך 700 מטר לכיוון מקור השריפה, 2 דלתות ושער 1 בדרך'
+    parking1: { message: 'לך 100 מטר לכיוון מקור השריפה, 3 דלתות ושער 1 בדרך', arrow: 'rightArrow' },
+    parking2: { message: 'לך 200 מטר לכיוון מקור השריפה, 2 דלתות ושער 1 בדרך', arrow: 'rightArrow' },
+    parking3: { message: 'לך 400 מטר לכיוון מקור השריפה, 4 דלתות ושער 1 בדרך', arrow: 'leftArrow' },
+    parking4: { message: 'לך 300 מטר לכיוון מקור השריפה, 3 דלתות ושער 1 בדרך', arrow: 'rightArrow' },
+    parking5: { message: 'לך 700 מטר לכיוון מקור השריפה, 2 דלתות ושער 1 בדרך', arrow: 'leftArrow' }
   };
+  
   const FireIcon = () => {
     const map = useMap();
     const [fireIconSize, setFireIconSize] = useState({ width: 30, height: 30 });

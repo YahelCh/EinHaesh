@@ -1,15 +1,19 @@
 import React, { useEffect } from 'react';
 import cancelIcon from '../assets/actions_icons/cancel.png';
-import rightArrow from '../assets/actions_icons/rightArrow.png'; // הכנס את הנתיב לתמונה של החץ
+import rightArrowImg from '../assets/actions_icons/right-arrow.svg'; 
+import leftArrowImg from '../assets/actions_icons/left-arrow.svg'; 
 
-const PopupMessage = ({ message, onClose }) => {
+    const PopupMessage = ({ message: { message, arrow }, onClose }) => {
+
   useEffect(() => {
+    console.log(message)
     const timer = setTimeout(() => {
-      onClose(); // סוגר את ההודעה אחרי 3 שניות
+      onClose(); 
     }, 3000); 
 
     return () => clearTimeout(timer); 
   }, [onClose]);
+  const arrowImg = arrow === 'rightArrow' ? rightArrowImg : leftArrowImg;
 
   return (
     <div 
@@ -30,7 +34,7 @@ const PopupMessage = ({ message, onClose }) => {
       }}
     >
       <img 
-        src={rightArrow} 
+        src={arrowImg} 
         alt="חץ" 
         style={{
           width: '60px', 
