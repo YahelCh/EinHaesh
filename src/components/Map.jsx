@@ -11,20 +11,24 @@ import MapLegend from './MapLegend';
 import fireIconImg from '../assets/fire-icon.svg';
 
 import ParkingLegendMark from './ParkingLegendMark'
+import MyLocation from './MyLocation'
 
 import parkingOption from '../assets/parking1.png';
 import Taim from './Taim';
 import { TaimLst } from '../store/dec'
+import AlertWithToastify from './Alerts';
+import ShowWay from './showWay';
 
 const bounds = [[0, 0], [700, 700]];
 
-const Map = ({ setReports, setHighlighted }) => {
+const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
   const [activeAction, setActiveAction] = useState({});
   const [markers, setMarkers] = useState([]);
   const [showParking, setShowParking] = useState(false);
   const [selectedParkingCoords, setSelectedParkingCoords] = useState(null);
   const [activeRoute, setActiveRoute] = useState(null);
   const [taimList, setTaimList] = useState(TaimLst);
+  const [zoomMap, setZoomMap] = useState(false);
 
   const mapRef = useRef();
 
@@ -252,6 +256,7 @@ const Map = ({ setReports, setHighlighted }) => {
       fireCoords,                  // סיום
     ],
   };
+
   const FireIcon = () => {
     const map = useMap();
     const [fireIconSize, setFireIconSize] = useState({ width: 30, height: 30 });
@@ -347,18 +352,20 @@ const Map = ({ setReports, setHighlighted }) => {
         crs={L.CRS.Simple}
         ref={mapRef}
       >
-        <BaseMap />
-        {markers.map((marker, index) => (
-          <Marker key={index} {...marker}>
+        {!isWaringOpoup && <AlertWithToastify />}
+        <ShowWay setZoomMap={setZoomMap} />
+        <BaseMap zoomMap={zoomMap} />
+        {!zoomMap &&
+          markers.map((marker, index) => (
+            <Marker key={index} {...marker}>
 
-          </Marker>
-        ))}
+            </Marker>
+          ))}
 
-        <ParkingLegendMark handleParkingClick={() => setShowParking(prev => !prev)} />
+        {!zoomMap && <ParkingLegendMark handleParkingClick={() => setShowParking(prev => !prev)} />}
+        {!zoomMap && <MyLocation/>}
 
-
-
-        {showParking && (
+        {showParking && !zoomMap && (
           <>
 
             {parkingPoints.map((point, index) => (
@@ -380,8 +387,8 @@ const Map = ({ setReports, setHighlighted }) => {
             ))}
           </>
         )}
-        <FireIcon />
-        <Taim handleClickZone={handleClickZone} taimList={taimList} />
+        {!zoomMap && <FireIcon />}
+        {!zoomMap && <Taim handleClickZone={handleClickZone} taimList={taimList} />}
         <MapClickHandler />
       </MapContainer>
     </div>

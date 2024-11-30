@@ -69,12 +69,12 @@ function App() {
 
             </div>
             <div>
-              <img style={{marginRight:'10px'}} src={logoShabas} alt="logo shabas" width="30" height="30" />
+              <img style={{ marginRight: '10px' }} src={logoShabas} alt="logo shabas" width="30" height="30" />
             </div>
 
           </div>
           <div className='map-wrapper'>
-            <Map fireFightingView={fireFightingView} reports={reports} setReports={setReports} setHighlighted={setHighlighted} ></Map>
+            <Map isWaringOpoup={isWaringOpoup} fireFightingView={fireFightingView} reports={reports} setReports={setReports} setHighlighted={setHighlighted} ></Map>
           </div>
         </div>
         {/* <div style={{ position: 'absolute' }} onClick={() => setFireFightingView(!fireFightingView)}>תכנן פעולות כב"ה</div> */}
