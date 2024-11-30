@@ -339,6 +339,7 @@ const Map = ({ setReports, setHighlighted }) => {
       <ActionsBar activeAction={activeAction} setActiveAction={setActiveAction} />
       <MapContainer
         center={[350, 350]}
+        zoomControl={false}
         zoom={-1}
         maxBounds={bounds}
         maxBoundsViscosity={0.8}

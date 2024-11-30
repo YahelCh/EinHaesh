@@ -169,8 +169,9 @@ useEffect(() => {
       <div className="reports-list">
         {reports.map((report) => (
           <div key={report.id}  ref={report.id === reports[reports.length - 1].id ? lastReportRef : null}>
+            {report.user&&<div className='user'></div>}
             {/* הצגת ההקלטה */}
-            {report.audioUrl && (
+                        {report.audioUrl && (
               <div className="audio-container">
                 <audio controls src={report.audioUrl}></audio>
                 <div className="message-meta">
