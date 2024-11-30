@@ -1,5 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './ReportsPage.css';
+import man1 from '../assets/actions_icons/man1.png';
+import man2 from '../assets/actions_icons/man2.png';
+import man3 from '../assets/actions_icons/man3.png';
+import man4 from '../assets/actions_icons/man4.png';
+import man5 from '../assets/actions_icons/man5.png';
 
 const ReportsPage = ({ reports, setReports,highlighted, setHighlighted }) => {
   const [currentReport, setCurrentReport] = useState('');
@@ -11,19 +16,37 @@ const ReportsPage = ({ reports, setReports,highlighted, setHighlighted }) => {
   
   const lastReportRef = useRef(null);
 
-  const allReports = [
+  const [userIndex, setUserIndex] = useState(0);
 
-    // רשימת הדיווחים
-   "דיווח ארוע לפיד בוער רמה 4" ,
-   'כוחות כב"ה בדרך',
-   "דלת ראשית חדר אוכל יצאה משימוש" ,
-   "2 פצועים לפינוי" ,
-   'כוחות מד"א בדרך'
+  const allReports = [
+    {
+      text: "דיווח ארוע לפיד בוער רמה 4",
+       profilePic: man1 ,
+    },
+    {
+      text: "כוחות כב\"ה בדרך",
+    profilePic: man2 ,
+    },
+    {
+      text: "דלת ראשית חדר אוכל יצאה משימוש",
+     profilePic: man3,
+    },
+    {
+      text: "2 פצועים לפינוי",
+      profilePic: man4 ,
+    },
+    {
+      text: "כוחות מד\"א בדרך",
+      profilePic: man5 ,
+    },
   ];
   
-  useEffect(() => {
-    addReport( allReports[0])
 
+  useEffect(() => {
+    // 
+// let reportTimeout= setTimeout(() => {
+//   addReport( allReports[0])
+// }, 10);
     let index = 1; // אינדקס לדיווח הבא
     const interval = setInterval(() => {
       if (index < allReports.length) {
@@ -33,7 +56,10 @@ const ReportsPage = ({ reports, setReports,highlighted, setHighlighted }) => {
         clearInterval(interval); // עצירת הטיימר אם סיימנו לדחוף הכל
       }
     }, 3000); // כל 3 שניות
-    return () => clearInterval(interval); // ניקוי הטיימר
+    return () => {clearInterval(interval); // ניקוי הטיימר
+      
+      // clearTimeout(reportTimeout)
+      }
   }, []); 
 
   const startRecording = () => {
@@ -111,6 +137,7 @@ const ReportsPage = ({ reports, setReports,highlighted, setHighlighted }) => {
 
   const sendTranscription = (transcript) => {
     const timeSent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const currentUser = allReports[userIndex];  // שליפה של המשתמש הנוכחי
     setReports((prevReports) => {
       const updatedReports = [...prevReports];
       const lastReportIndex = updatedReports.length - 1;
@@ -119,6 +146,8 @@ const ReportsPage = ({ reports, setReports,highlighted, setHighlighted }) => {
         updatedReports[lastReportIndex].transcript = transcript;
         updatedReports[lastReportIndex].text = `תמלול ההקלטה: ${transcript}`;
         updatedReports[lastReportIndex].time = timeSent;
+        updatedReports[lastReportIndex].profilePic = currentUser.profilePic; // הוספת פרופיל להקלטה
+
       }
 
       return updatedReports;
@@ -126,28 +155,36 @@ const ReportsPage = ({ reports, setReports,highlighted, setHighlighted }) => {
   };
 
   const addReport = (content) => {
-    if (content.trim() !== '') {
-      const timeSent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const newReportId = reports.length;
-      const newReport={
-         id: Date.now(),
-          text: content,
-          isRecording: false,
-          time: timeSent,
-      }
-      setHighlighted(newReport.id);
-  
-      // הסרת ההדגשה אחרי 2 שניות
-     
+    console.log(content);
+    if (content && content.text.trim() !== '') {
+        const timeSent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-      
-      setReports((prevReports) => [
-        ...prevReports,
-        newReport,
-      ]);
-      setCurrentReport('');
+        // בחר את המשתמש הנוכחי לפי userIndex
+        const currentUser = content;
+        
+        // עדכון ה-index כך שבכל דיווח המשתמש יתחלף
+        const nextIndex = (userIndex + 1) % allReports.length;
+        setUserIndex(nextIndex); // עדכון ה-userIndex אחרי יצירת הדיווח
+
+        const newReport = {
+            id: Date.now(),
+            text: content.text,
+            profilePic: content.profilePic, // הוספת תמונת פרופיל של המשתמש
+            user: currentUser,  // הצגת המשתמש הנוכחי
+            isRecording: false,
+            time: timeSent,
+        };
+
+        setHighlighted(newReport.id);
+
+        // הוספת הדיווח לרשימה
+        setReports((prevReports) => [...prevReports, newReport]);
+        setCurrentReport('');
     }
-  };
+};
+
+
+  
 
 useEffect(()=>{
 if(highlighted){
@@ -168,8 +205,13 @@ useEffect(() => {
       <div className="reports-title">עדכונים</div>
       <div className="reports-list">
         {reports.map((report) => (
-          <div key={report.id}  ref={report.id === reports[reports.length - 1].id ? lastReportRef : null}>
-            {report.user&&<div className='user'></div>}
+          <div 
+          // className='check' 
+          key={report.id}  ref={report.id === reports[reports.length - 1].id ? lastReportRef : null}>
+         <div className="profile-circle">
+              <img src={report.profilePic} className="profile-image" />
+            </div>
+            {/* {report.user&&<div className='user'></div>} */}
             {/* הצגת ההקלטה */}
                         {report.audioUrl && (
               <div className="audio-container">
@@ -204,8 +246,7 @@ useEffect(() => {
         
         /> */}
         {currentReport && (
-          <button onClick={()=>addReport(currentReport)} className="send-button">
-            ➤
+   <button onClick={() => addReport({ text: currentReport, profilePic: allReports[userIndex].profilePic })} className="send-button">            ➤
           </button>
         )}
         <button

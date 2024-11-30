@@ -9,6 +9,7 @@ import appIcon from './assets/apppp.png'
 import appBoard from './assets/app-icon.png'
 import loadingimg from './assets/landing.png'
 import Timer from './components/Timer'
+import man1 from './assets/actions_icons/man1.png';
 
 
 function App() {
@@ -16,7 +17,10 @@ function App() {
   const [isWaringOpoup, setIsWaringOpoup] = useState(false);
   const [isAppShown, setIsAppShown] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [reports, setReports] = useState([]);
+  const [reports, setReports] = useState([{
+    text: "דיווח ארוע לפיד בוער רמה 4",
+     profilePic: man1 ,
+  },]);
   const [highlighted, setHighlighted] = useState(null);
 
 
