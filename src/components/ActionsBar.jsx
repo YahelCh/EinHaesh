@@ -13,8 +13,8 @@ import gasTapIconActive from '../assets/actions_icons/gasTapIconActive.svg';
 import fireCabinetIcon from '../assets/actions_icons/fireCabinetIcon.svg';
 import fireCabinetIconActive from '../assets/actions_icons/fireCabinetIconActive.svg';
 import iconParking from '../assets/actions_icons/iconParking.svg';
-import pinuyActive from '../assets/actions_icons/pinuyActive.png';
-import pinuy from '../assets/actions_icons/pinuy.png';
+import pinuyActive from '../assets/actions_icons/pinuyActive.svg';
+import pinuy from '../assets/actions_icons/pinuy.svg';
 // import iconParkingActive from '../assets/actions_icons/iconParkingActive';
 
 
@@ -24,7 +24,7 @@ const ActionsBar = ({ setActiveAction, activeAction, onParkingClick }) => {
         { name: 'trapped', icon: iconTrapped, activeIcon: iconTrappedActive, reportText: 'דיווח על לכודים תא 12' },
         { name: 'smoke', icon: iconSmoke, activeIcon: iconSmokeActive, reportText: 'עשן חדר אוכל ותאים 2,3,4' },
         { name: 'gas', icon: gasTapIcon, activeIcon: gasTapIconActive, reportText: 'סגירת ברז גז' },
-        { name: 'fireCabinet', icon: fireCabinetIcon, activeIcon: fireCabinetIconActive, reportText: 'ארון כיבוי' },
+        { name: 'fireCabinet', icon: fireCabinetIcon, activeIcon: fireCabinetIconActive, reportText: 'שימוש בציוד ארון כיבוי' },
         { name: 'pinuy', icon: pinuy, activeIcon: pinuyActive, reportText: 'פינוי אסירים' },
 
         // { 

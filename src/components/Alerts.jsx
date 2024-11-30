@@ -9,8 +9,21 @@ const AlertWithToastify = () => {
 
   useEffect(() => {
     notify("יש לסגור ברז גז מס’ 675")
-    notify("יש להוריד שאלטר בלוח חשמל מערבי אגף 6")
-    notify("יש לערוך סריקה אגף 6 תאים 1-12")
+    
+    
+    const timeout1 = setTimeout(() => {
+      notify("יש להוריד שאלטר בלוח חשמל מערבי אגף 6");
+    }, 2500);
+
+    const timeout2 = setTimeout(() => {
+      notify("יש לערוך סריקה אגף 6 תאים 1-12");
+    }, 5000);
+
+    // ניקוי הטיימרים במקרה של unmount
+    return () => {
+      clearTimeout(timeout1);
+      clearTimeout(timeout2);
+    };
   }, []);
 
   return (

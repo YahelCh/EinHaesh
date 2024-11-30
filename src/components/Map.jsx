@@ -9,17 +9,105 @@ import { EditControl } from 'react-leaflet-draw';
 import ActionsBar from './ActionsBar';
 import MapLegend from './MapLegend';
 import fireIconImg from '../assets/fire-icon.svg';
-
 import ParkingLegendMark from './ParkingLegendMark'
-import MyLocation from './MyLocation'
-
+import locationIcon from '../assets/location.svg'
 import parkingOption from '../assets/parking1.png';
 import Taim from './Taim';
+import PopupMessage from './PopupMessage';
 import { TaimLst } from '../store/dec'
 import AlertWithToastify from './Alerts';
 import ShowWay from './showWay';
+import MyLocation from './MyLocation'
+
 
 const bounds = [[0, 0], [700, 700]];
+const fireCoords = { lat: 510.11, lng: 177.91 };
+
+const FireIcon = () => {
+  const map = useMap();
+  const fireSizeRef=useRef({ width: 30, height: 30 })
+  const [fireIconSize, setFireIconSize] = useState({ width: 30, height: 30 });
+  const [sizeIncreasedOnce, setSizeIncreasedOnce] = useState(false);
+  // const firePosition = [500.1097758661681, 177.9148148148148];
+
+  useEffect(() => {
+    // פונקציה שמגדילה את גודל האש כל 3 שניות אחרי שהגדלנו פעם ראשונה
+    const increaseFireSize = () => {
+      setFireIconSize(prevSize => {
+        if (prevSize.width >= 160) {
+          return prevSize; // אם הגודל הגיע ל-160, לא לשנות אותו
+        }
+        return {
+          width: prevSize.width + 10,
+          height: prevSize.height + 10,
+        };
+      });
+      fireSizeRef.current={
+        width:  fireSizeRef.current.width + 10,
+        height:  fireSizeRef.current.height + 10,
+      }
+    };
+
+    const initialTimer = setTimeout(() => {
+      setSizeIncreasedOnce(true);
+      increaseFireSize();
+    }, 10000);
+
+    let intervalTimer;
+    if (sizeIncreasedOnce) {
+      intervalTimer = setInterval(increaseFireSize, 3000);
+    }
+
+    return () => {
+      clearTimeout(initialTimer);
+      if (intervalTimer) {
+        clearInterval(intervalTimer);
+      }
+    };
+  }, [sizeIncreasedOnce]);
+
+  // useEffect(() => {
+  //   const updateFireIconSize = () => {
+  //     const zoomLevel = map.getZoom();
+  //     let newWidth = 50;
+
+  //     if (zoomLevel === -1) {
+  //       newWidth = 50;
+  //     } else if (zoomLevel === 0) {
+  //       newWidth = 50;
+  //     } else if (zoomLevel === 1) {
+  //       newWidth = 100;
+  //     } else if (zoomLevel >= 2) {
+  //       newWidth = 150;
+  //     }
+
+  //     setFireIconSize({ width: newWidth });
+  //   };
+
+  //   const focusOnFire = () => {
+  //     const zoomLevel = map.getZoom();
+  //     map.setView(firePosition, zoomLevel, { animate: true });
+  //   };
+
+  //   map.on("zoom", () => {
+  //     updateFireIconSize();
+  //     focusOnFire();
+  //   });
+  //   return () => {
+  //     map.off("zoom", updateFireIconSize);
+  //     map.off("zoom", focusOnFire);
+  //   };
+  // }, [map]);
+
+  const fireIcon = L.divIcon({
+    className: "fire-icon",
+    html: `<img src="${fireIconImg}" alt="Fire Icon" style="width: ${ fireSizeRef.current.width}px; height: ${ fireSizeRef.current.height}px;" />`,
+    iconSize: [ fireSizeRef.current.width,  fireSizeRef.current.height],
+    iconAnchor: [ fireSizeRef.current.width / 2,  fireSizeRef.current.height / 2],
+  });
+
+  return <Marker position={fireCoords} icon={fireIcon} />;
+};
 
 const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
   const [activeAction, setActiveAction] = useState({});
@@ -28,10 +116,11 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
   const [selectedParkingCoords, setSelectedParkingCoords] = useState(null);
   const [activeRoute, setActiveRoute] = useState(null);
   const [taimList, setTaimList] = useState(TaimLst);
+  const [locationMarker, setLocationMarker] = useState(null);
   const [zoomMap, setZoomMap] = useState(false);
 
   const mapRef = useRef();
-
+ 
 
   const Parking = ({ position, index, iconKey }) => {
 
@@ -68,32 +157,32 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
     const parkingIcons = {
       parkingIcon0: L.divIcon({
         className: "custom-icon",
-        html: `<img src="${parkingOption}" style=" height: ${iconSize}px;transform: rotate(43deg) scale(1);"  />`, // חניה שמאלית למעלה
+        html: `<img src="${parkingOption}" style=" height: ${iconSize}px;transform: rotate(43deg) scale(1); zIndex: 70;"  />`, // חניה שמאלית למעלה
         iconSize: [iconSize, iconSize],
         iconAnchor: iconAnchor,
       }),
       parkingIcon1: L.divIcon({
         className: "custom-icon",
-        html: `<img src="${parkingOption}" style=" height: ${iconSize}px;transform: rotate(-4deg) scale(1) " />`, //  החניות הימניות 2
+        html: `<img src="${parkingOption}" style=" height: ${iconSize}px;transform: rotate(-4deg) scale(1) zIndex: 70;" />`, //  החניות הימניות 2
         iconSize: [iconSize, iconSize],
         iconAnchor: iconAnchor,
       }),
       parkingIcon2: L.divIcon({
         className: "custom-icon",
-        html: `<img src="${parkingOption}" style=" height: ${iconSize}px; transform: rotate(-47deg) scale(1);" />`, // חניה למטה
+        html: `<img src="${parkingOption}" style=" height: ${iconSize}px; transform: rotate(-47deg) scale(1); zIndex: 70;" />`, // חניה למטה
         iconSize: [iconSize, iconSize],
         iconAnchor: iconAnchor,
       }),
       parkingIcon3: L.divIcon({
         className: "custom-icon",
-        html: `<img src="${parkingOption}" style=" height: ${iconSize}px; rotate(-4deg) scale(1)" />`, //  החניות הימניות 2
+        html: `<img src="${parkingOption}" style=" height: ${iconSize}px; rotate(-4deg) scale(1)zIndex: 70;" />`, //  החניות הימניות 2
         iconSize: [iconSize, iconSize],
         iconAnchor: iconAnchor,
       }),
 
       parkingIcon4: L.divIcon({
         className: "custom-icon",
-        html: `<img src="${parkingOption}" style=" height: ${iconSize}px;transform: rotate(43deg) scale(1);"  />`, // חניה שמאלית למטה
+        html: `<img src="${parkingOption}" style=" height: ${iconSize}px;transform: rotate(43deg) scale(1);zIndex: 70;"  />`, // חניה שמאלית למטה
         iconSize: [iconSize, iconSize],
         iconAnchor: iconAnchor,
       })
@@ -167,36 +256,44 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
     });
   };
 
-  const fireCoords = { lat: 510.11, lng: 177.91 }; // הנקודה של האש 
+ // הנקודה של האש 
+  const [activeMessage, setActiveMessage] = useState(null)
+  const [popupMessage, setPopupMessage] = useState(""); 
 
   const handleOnClickOnParking = (parkingName) => {
-    console.log(`Clicked on: ${parkingName}`); // בדיקה: הדפסת שם החניה
+    console.log(`Clicked on: ${parkingName}`);
+    const route = parkingRoutes[parkingName];
 
-    const route = parkingRoutes[parkingName]; // שליפת המסלול לפי שם החניה
+    const { message, arrow } = parkingMessages[parkingName]; // נשלוף גם את ההודעה וגם את סוג החץ
+    setActiveMessage(message);
+    setPopupMessage({ message, arrow }); 
+
     if (activeRoute === parkingName) {
+      setActiveRoute(null);
+      setLocationMarker(null);
+      setPopupMessage("");
       if (mapRef.current) {
         mapRef.current.eachLayer((layer) => {
           if (layer instanceof L.Polyline) {
-            mapRef.current.removeLayer(layer); // מסיר את המסלול
+            mapRef.current.removeLayer(layer);
           }
         });
       }
-      setActiveRoute(null);
     } else {
 
-      const route = parkingRoutes[parkingName];
+      setActiveRoute(parkingName);
+      setLocationMarker(route[0]);
       if (route && mapRef.current) {
         const map = mapRef.current;
-        const polyline = L.polyline(route.map(point => [point.lat, point.lng]), {
-          color: 'blue',
+        const polyline = L.polyline(route.map((point) => [point.lat, point.lng]), {
+          color: '#007AFF',
           weight: 5,
           opacity: 0.7,
         }).addTo(map);
-
-        setActiveRoute(parkingName);
       }
     }
   };
+
 
   const handleClickZone = (index) => {
     let desc = TaimLst.find(f => f.id == index)?.desc
@@ -222,10 +319,10 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
   const parkingRoutes = {
     parking1: [
       { lat: 530.73, lng: 455.39 }, // חניה 1
-      {lat: 503.0883480794362, lng: 537.2487562189054},  // עיקול 1
-      {lat: 427.12579532552115, lng: 474.26231438228706},  // עיקול 2
-      {lat: 520.08489899098095, lng: 371.2844809033711},  // עיקול 3
-      {lat: 520.08489899098095, lng: 208.2844809033711},  // עיקול 4
+      { lat: 503.0883480794362, lng: 537.2487562189054 },  // עיקול 1
+      { lat: 427.12579532552115, lng: 474.26231438228706 },  // עיקול 2
+      { lat: 520.08489899098095, lng: 371.2844809033711 },  // עיקול 3
+      { lat: 520.08489899098095, lng: 208.2844809033711 },  // עיקול 4
 
       fireCoords,                  // סיום
     ],
@@ -237,11 +334,11 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
     ],
     parking3: [
       // { lat: 434.45, lng: 556.7 }, // חניה 3
-    { lat: 410.09, lng: 572.32},
-      {lat: 503.0883480794362, lng: 537.2487562189054},  // עיקול 1
-      {lat: 427.12579532552115, lng: 474.26231438228706},  // עיקול 2
-      {lat: 520.08489899098095, lng: 371.2844809033711},  // עיקול 3
-      {lat: 520.08489899098095, lng: 208.2844809033711},  // עיקול 4
+      { lat: 410.09, lng: 572.32 },
+      { lat: 503.0883480794362, lng: 537.2487562189054 },  // עיקול 1
+      { lat: 427.12579532552115, lng: 474.26231438228706 },  // עיקול 2
+      { lat: 520.08489899098095, lng: 371.2844809033711 },  // עיקול 3
+      { lat: 520.08489899098095, lng: 208.2844809033711 },  // עיקול 4
       fireCoords,                  // סיום
     ],
     parking4: [
@@ -256,87 +353,61 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
       fireCoords,                  // סיום
     ],
   };
-
-  const FireIcon = () => {
+  const parkingMessages = {
+    parking1: { message: 'לך 100 מטר לכיוון מקור השריפה, 3 דלתות ושער 1 בדרך', arrow: 'rightArrow' },
+    parking2: { message: 'לך 200 מטר לכיוון מקור השריפה, 2 דלתות ושער 1 בדרך', arrow: 'rightArrow' },
+    parking3: { message: 'לך 400 מטר לכיוון מקור השריפה, 4 דלתות ושער 1 בדרך', arrow: 'leftArrow' },
+    parking4: { message: 'לך 300 מטר לכיוון מקור השריפה, 3 דלתות ושער 1 בדרך', arrow: 'rightArrow' },
+    parking5: { message: 'לך 700 מטר לכיוון מקור השריפה, 2 דלתות ושער 1 בדרך', arrow: 'leftArrow' }
+  };
+  
+ 
+  const LocationIcon = () => {
     const map = useMap();
-    const [fireIconSize, setFireIconSize] = useState({ width: 30, height: 30 });
-    const [sizeIncreasedOnce, setSizeIncreasedOnce] = useState(false);
-    // const firePosition = [500.1097758661681, 177.9148148148148];
+    const [locationIconSize, setLocationIconSize] = useState({ width: 40, height: 40 });
 
     useEffect(() => {
-      // פונקציה שמגדילה את גודל האש כל 3 שניות אחרי שהגדלנו פעם ראשונה
-      const increaseFireSize = () => {
-        setFireIconSize(prevSize => {
-          if (prevSize.width >= 160) {
-            return prevSize; // אם הגודל הגיע ל-160, לא לשנות אותו
-          }
-          return {
-            width: prevSize.width + 10,
-            height: prevSize.height + 10,
-          };
-        });
-      };
-
-      const initialTimer = setTimeout(() => {
-        setSizeIncreasedOnce(true);
-        increaseFireSize();
-      }, 10000);
-
-      let intervalTimer;
-      if (sizeIncreasedOnce) {
-        intervalTimer = setInterval(increaseFireSize, 3000);
-      }
-
-      return () => {
-        clearTimeout(initialTimer);
-        if (intervalTimer) {
-          clearInterval(intervalTimer);
-        }
-      };
-    }, [sizeIncreasedOnce]);
-
-    useEffect(() => {
-      const updateFireIconSize = () => {
+      const updateIconSize = () => {
         const zoomLevel = map.getZoom();
-        let newWidth = 50;
+        let newSize = 40;
 
-        if (zoomLevel === -1) {
-          newWidth = 50;
-        } else if (zoomLevel === 0) {
-          newWidth = 50;
-        } else if (zoomLevel === 1) {
-          newWidth = 100;
-        } else if (zoomLevel >= 2) {
-          newWidth = 150;
-        }
+        if (zoomLevel === -1) newSize = 40;
+        else if (zoomLevel === 0) newSize = 50;
+        else if (zoomLevel === 1) newSize = 60;
+        else if (zoomLevel >= 2) newSize = 80;
 
-        setFireIconSize({ width: newWidth });
+        setLocationIconSize({ width: newSize, height: newSize });
       };
 
-      const focusOnFire = () => {
-        const zoomLevel = map.getZoom();
-        map.setView(firePosition, zoomLevel, { animate: true });
-      };
-
-      map.on("zoom", () => {
-        updateFireIconSize();
-        focusOnFire();
-      });
-      return () => {
-        map.off("zoom", updateFireIconSize);
-        map.off("zoom", focusOnFire);
-      };
+      map.on("zoom", updateIconSize);
+      return () => map.off("zoom", updateIconSize);
     }, [map]);
 
-    const fireIcon = L.divIcon({
-      className: "fire-icon",
-      html: `<img src="${fireIconImg}" alt="Fire Icon" style="width: ${fireIconSize.width}px; height: ${fireIconSize.height}px;" />`,
-      iconSize: [fireIconSize.width, fireIconSize.height],
-      iconAnchor: [fireIconSize.width / 2, fireIconSize.height / 2],
+    if (!locationMarker) {
+      return null;
+    }
+
+    const locationDivIcon = L.divIcon({
+      className: "location-icon",
+      html: `<img src="${locationIcon}" style="width: ${locationIconSize.width}px; height: ${locationIconSize.height}px; pointer-events: none;" />`,
+      iconSize: [locationIconSize.width, locationIconSize.height],
+      iconAnchor: [locationIconSize.width / 2, locationIconSize.height / 2],
     });
 
-    return <Marker position={fireCoords} icon={fireIcon} />;
+    // Marker component with zIndex customization
+    return (
+      <Marker
+        position={[locationMarker.lat, locationMarker.lng]}
+        icon={locationDivIcon}
+        zIndexOffset={1000} // Adjust the zIndexOffset here
+      />
+    );
   };
+  const handleClosePopup = () => {
+    setPopupMessage(""); // לסגור את ההודעה
+  };
+  
+
 
 
   return (
@@ -363,36 +434,45 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
           ))}
 
         {!zoomMap && <ParkingLegendMark handleParkingClick={() => setShowParking(prev => !prev)} />}
-        {!zoomMap && <MyLocation/>}
+        {/* {!zoomMap && <MyLocation/>} */}
 
-        {showParking && !zoomMap && (
+        {/* {showParking && !zoomMap && (
+        <BaseMap /> */}
+        
+        {markers.map((marker, index) => (
+          <Marker key={index} {...marker} />
+        ))}
+        {locationMarker && <LocationIcon />}
+        <ParkingLegendMark handleParkingClick={() => setShowParking(prev => !prev)} />
+  
+        {showParking && (
           <>
-
             {parkingPoints.map((point, index) => (
               <>
-                <Parking index={index} key={index} position={[point.lat, point.lng]}
-                  iconKey={point.icon} />
-                {/* <Marker 
-                eventHandlers={{
-                  click: () => handleOnClickOnParking(`parking${index + 1}`), // שמירת החניה שנלחצה
-                }}
-
-              >
-                <Popup>{`חניה ${index + 1}`}</Popup>
-              </Marker> */}
-
-                {selectedParkingCoords &&
-                  <Polyline positions={routePoints.map(point => [point.lat, point.lng])} color="blue" weight={5} opacity={0.7} />}
+                <Parking 
+                  index={index} 
+                  key={index} 
+                  position={[point.lat, point.lng]} 
+                  iconKey={point.icon} 
+                />
               </>
             ))}
           </>
         )}
+
         {!zoomMap && <FireIcon />}
         {!zoomMap && <Taim handleClickZone={handleClickZone} taimList={taimList} />}
+  
+        {/* הצגת ההודעה הקופצת */}
+        {popupMessage && <PopupMessage message={popupMessage} onClose={handleClosePopup} />}
+  
+      
+        <Taim handleClickZone={handleClickZone} taimList={taimList} />
         <MapClickHandler />
       </MapContainer>
     </div>
   );
+  
 };
 
 export default Map;
