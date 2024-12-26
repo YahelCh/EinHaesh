@@ -25,27 +25,26 @@ const fireCoords = { lat: 510.11, lng: 177.91 };
 
 const FireIcon = () => {
   const map = useMap();
-  const fireSizeRef=useRef({ width: 30, height: 30 })
+  const fireSizeRef = useRef({ width: 30, height: 30 });
   const [fireIconSize, setFireIconSize] = useState({ width: 30, height: 30 });
   const [sizeIncreasedOnce, setSizeIncreasedOnce] = useState(false);
-  // const firePosition = [500.1097758661681, 177.9148148148148];
+
+  const MAX_FIRE_SIZE = 160; // גודל מקסימלי של האש
 
   useEffect(() => {
-    // פונקציה שמגדילה את גודל האש כל 3 שניות אחרי שהגדלנו פעם ראשונה
+    // פונקציה שמגדילה את גודל האש כל 3 שניות אחרי הגדלה ראשונה
     const increaseFireSize = () => {
       setFireIconSize(prevSize => {
-        if (prevSize.width >= 160) {
-          return prevSize; // אם הגודל הגיע ל-160, לא לשנות אותו
+        if (prevSize.width >= MAX_FIRE_SIZE) {
+          return prevSize; // לא מגדילים אם הגודל הגיע למקסימום
         }
-        return {
+        const newSize = {
           width: prevSize.width + 10,
           height: prevSize.height + 10,
         };
+        fireSizeRef.current = newSize; // עדכון ה-Ref לגודל החדש
+        return newSize;
       });
-      fireSizeRef.current={
-        width:  fireSizeRef.current.width + 10,
-        height:  fireSizeRef.current.height + 10,
-      }
     };
 
     const initialTimer = setTimeout(() => {
@@ -55,59 +54,30 @@ const FireIcon = () => {
 
     let intervalTimer;
     if (sizeIncreasedOnce) {
-      intervalTimer = setInterval(increaseFireSize, 3000);
+      intervalTimer = setInterval(() => {
+        if (fireSizeRef.current.width < MAX_FIRE_SIZE) {
+          increaseFireSize();
+        }
+      }, 3000);
     }
 
     return () => {
       clearTimeout(initialTimer);
-      if (intervalTimer) {
-        clearInterval(intervalTimer);
-      }
+      if (intervalTimer) clearInterval(intervalTimer);
     };
   }, [sizeIncreasedOnce]);
 
-  // useEffect(() => {
-  //   const updateFireIconSize = () => {
-  //     const zoomLevel = map.getZoom();
-  //     let newWidth = 50;
-
-  //     if (zoomLevel === -1) {
-  //       newWidth = 50;
-  //     } else if (zoomLevel === 0) {
-  //       newWidth = 50;
-  //     } else if (zoomLevel === 1) {
-  //       newWidth = 100;
-  //     } else if (zoomLevel >= 2) {
-  //       newWidth = 150;
-  //     }
-
-  //     setFireIconSize({ width: newWidth });
-  //   };
-
-  //   const focusOnFire = () => {
-  //     const zoomLevel = map.getZoom();
-  //     map.setView(firePosition, zoomLevel, { animate: true });
-  //   };
-
-  //   map.on("zoom", () => {
-  //     updateFireIconSize();
-  //     focusOnFire();
-  //   });
-  //   return () => {
-  //     map.off("zoom", updateFireIconSize);
-  //     map.off("zoom", focusOnFire);
-  //   };
-  // }, [map]);
-
+  // יצירת אייקון האש
   const fireIcon = L.divIcon({
     className: "fire-icon",
-    html: `<img src="${fireIconImg}" alt="Fire Icon" style="width: ${ fireSizeRef.current.width}px; height: ${ fireSizeRef.current.height}px;" />`,
-    iconSize: [ fireSizeRef.current.width,  fireSizeRef.current.height],
-    iconAnchor: [ fireSizeRef.current.width / 2,  fireSizeRef.current.height / 2],
+    html: `<img src="${fireIconImg}" alt="Fire Icon" style="width: ${fireSizeRef.current.width}px; height: ${fireSizeRef.current.height}px;" />`,
+    iconSize: [fireSizeRef.current.width, fireSizeRef.current.height],
+    iconAnchor: [fireSizeRef.current.width / 2, fireSizeRef.current.height / 2],
   });
 
   return <Marker position={fireCoords} icon={fireIcon} />;
 };
+
 
 const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
   const [activeAction, setActiveAction] = useState({});
@@ -417,7 +387,7 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
         ref={mapRef}
       >
         {!isWaringOpoup && <AlertWithToastify />}
-        <ShowWay setZoomMap={setZoomMap} />
+        <ShowWay setZoomMap={setZoomMap}  />
         <BaseMap zoomMap={zoomMap} />
         {!zoomMap &&
           markers.map((marker, index) => (
