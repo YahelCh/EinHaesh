@@ -6,61 +6,93 @@ import man3 from '../assets/actions_icons/man3.png';
 import man4 from '../assets/actions_icons/man4.png';
 import man5 from '../assets/actions_icons/man5.png';
 
-const ReportsPage = ({ reports, setReports,highlighted, setHighlighted }) => {
+const ReportsPage = ({ reports, setReports, highlighted, setHighlighted }) => {
   const [currentReport, setCurrentReport] = useState('');
   const [recording, setRecording] = useState(false);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const recognitionRef = useRef(null);
   const [currentTranscript, setCurrentTranscript] = useState('');
-  
+
   const lastReportRef = useRef(null);
 
   const [userIndex, setUserIndex] = useState(0);
 
+  const fireEventUpdates = [
+    "מוקד השריפה זוהה: חדר ארכיון בקומה 2. צוות ראשון נכנס למבנה עם ציוד נשימה.",
+    "בוצעה בדיקה: לחץ המים בצינורות הכיבוי תקין. כוחות פועלים לכיבוי ממוקד.",
+    "האש מתפשטת לכיוון אגף הכניסה. כוחות נוספים מתמקמים לבלימת התפשטות.",
+    "תקרת קומה 2 אינה יציבה. צוותים עוברים לפעולה מבחוץ במידת האפשר.",
+    "הושלם סריקת הקומות: אין לכודים במבנה. ממשיכים בפעולות כיבוי.",
+    "עשן כבד באזור הדרומי של המבנה. צוות נוסף בדרכו לבדוק מוקדי בערה נוספים.",
+    "מערכת החשמל של המבנה נותקה כדי למנוע סיכון נוסף. המידע מעודכן במפה.",
+    "כוחות כיבוי מס' 4 בדרכם לאבטחת הגג, שם יש חשש להתפשטות השריפה.",
+    "בוצע פינוי של בלוני גז מהמטבח בקומת הקרקע. המצב בשליטה.",
+    "מוקד האירוע מעדכן: שליטה מלאה באש בקומה 2, מתחילים בפירוק אלמנטים מסוכנים."
+  ];
+
   const allReports = [
     {
       text: "דיווח ארוע לפיד בוער רמה 4",
-       profilePic: man1 ,
+      profilePic: man1,
     },
     {
       text: "כוחות כב\"ה בדרך",
-    profilePic: man2 ,
+      profilePic: man2,
     },
     {
       text: "דלת ראשית חדר אוכל יצאה משימוש",
-     profilePic: man3,
+      profilePic: man3,
     },
     {
       text: "2 פצועים לפינוי",
-      profilePic: man4 ,
+      profilePic: man4,
     },
     {
       text: "כוחות מד\"א בדרך",
-      profilePic: man5 ,
+      profilePic: man5,
     },
   ];
-  
+
+  const reporters = [man1, man2, man3, man4];
+
+  // פונקציה שמגרילה אלמנט ממערך
+  function getRandomElement(array) {
+    return array[Math.floor(Math.random() * array.length)];
+  }
+
+
 
   useEffect(() => {
+
+    // דוחף הודעה כל 5 שניות
+    // setInterval(() => {
+    //   const message = getRandomElement(fireEventUpdates);
+    //   const reporter = getRandomElement(reporters);
+    //   console.log(`[${reporter}]: ${message}`);
+    // }, 5000);
+
+
     // 
-// let reportTimeout= setTimeout(() => {
-//   addReport( allReports[0])
-// }, 10);
+    // let reportTimeout= setTimeout(() => {
+    //   addReport( allReports[0])
+    // }, 10);
     let index = 1; // אינדקס לדיווח הבא
     const interval = setInterval(() => {
-      if (index < allReports.length) {
-        addReport( allReports[index])
+      if (index < fireEventUpdates.length) {
+        const reporter = getRandomElement(reporters);
+        addReport({ text: fireEventUpdates[index], profilePic: reporter })
         index++;
       } else {
         clearInterval(interval); // עצירת הטיימר אם סיימנו לדחוף הכל
       }
-    }, 3000); // כל 3 שניות
-    return () => {clearInterval(interval); // ניקוי הטיימר
-      
+    }, 6000); // כל 3 שניות
+    return () => {
+      clearInterval(interval); // ניקוי הטיימר
+
       // clearTimeout(reportTimeout)
-      }
-  }, []); 
+    }
+  }, []);
 
   const startRecording = () => {
     setRecording(true);
@@ -157,63 +189,64 @@ const ReportsPage = ({ reports, setReports,highlighted, setHighlighted }) => {
   const addReport = (content) => {
     console.log(content);
     if (content && content.text.trim() !== '') {
-        const timeSent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const timeSent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        // בחר את המשתמש הנוכחי לפי userIndex
-        const currentUser = content;
-        
-        // עדכון ה-index כך שבכל דיווח המשתמש יתחלף
-        const nextIndex = (userIndex + 1) % allReports.length;
-        setUserIndex(nextIndex); // עדכון ה-userIndex אחרי יצירת הדיווח
+      // בחר את המשתמש הנוכחי לפי userIndex
+      const currentUser = content;
 
-        const newReport = {
-            id: Date.now(),
-            text: content.text,
-            profilePic: content.profilePic, // הוספת תמונת פרופיל של המשתמש
-            user: currentUser,  // הצגת המשתמש הנוכחי
-            isRecording: false,
-            time: timeSent,
-        };
+      // עדכון ה-index כך שבכל דיווח המשתמש יתחלף
+      const nextIndex = (userIndex + 1) % allReports.length;
+      setUserIndex(nextIndex); // עדכון ה-userIndex אחרי יצירת הדיווח
 
-        setHighlighted(newReport.id);
+      const newReport = {
+        id: Date.now(),
+        text: content.text,
+        profilePic: content.profilePic, // הוספת תמונת פרופיל של המשתמש
+        user: currentUser,  // הצגת המשתמש הנוכחי
+        isRecording: false,
+        time: timeSent,
+      };
 
-        // הוספת הדיווח לרשימה
-        setReports((prevReports) => [...prevReports, newReport]);
-        setCurrentReport('');
+      setHighlighted(newReport.id);
+
+      // הוספת הדיווח לרשימה
+      setReports((prevReports) => [...prevReports, newReport]);
+      setCurrentReport('');
     }
-};
+  };
 
 
-  
 
-useEffect(()=>{
-if(highlighted){
-  setTimeout(() => {
-    setHighlighted(null);
-  }, 2000);}
-  
-},[highlighted])
 
-useEffect(() => {
-  if (lastReportRef.current) {
-    lastReportRef.current.scrollIntoView({ behavior: "smooth" });
-  }
-}, [reports]);
+  useEffect(() => {
+    if (highlighted) {
+      setTimeout(() => {
+        setHighlighted(null);
+      }, 2000);
+    }
+
+  }, [highlighted])
+
+  useEffect(() => {
+    if (lastReportRef.current) {
+      lastReportRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [reports]);
 
   return (
     <div className="report-page">
       <div className="reports-title">עדכונים</div>
       <div className="reports-list">
         {reports.map((report) => (
-          <div 
-          // className='check' 
-          key={report.id}  ref={report.id === reports[reports.length - 1].id ? lastReportRef : null}>
-         <div className="profile-circle">
+          <div
+            // className='check' 
+            key={report.id} ref={report.id === reports[reports.length - 1].id ? lastReportRef : null}>
+            <div className="profile-circle">
               <img src={report.profilePic} className="profile-image" />
             </div>
             {/* {report.user&&<div className='user'></div>} */}
             {/* הצגת ההקלטה */}
-                        {report.audioUrl && (
+            {report.audioUrl && (
               <div className="audio-container">
                 <audio controls src={report.audioUrl}></audio>
                 <div className="message-meta">
@@ -239,14 +272,14 @@ useEffect(() => {
       </div>
 
       <div className="input-bar">
-        <input className='textbox' type={'text'}   onChange={(e) => setCurrentReport(e.target.value)}
-          placeholder="Type a message"/>
+        <input className='textbox' type={'text'} onChange={(e) => setCurrentReport(e.target.value)}
+          placeholder="Type a message" />
         {/* <textarea className='textbox'
           value={currentReport}
         
         /> */}
         {currentReport && (
-   <button onClick={() => addReport({ text: currentReport, profilePic: allReports[userIndex].profilePic })} className="send-button">            ➤
+          <button onClick={() => addReport({ text: currentReport, profilePic: allReports[userIndex].profilePic })} className="send-button">            ➤
           </button>
         )}
         <button
