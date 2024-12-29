@@ -54,7 +54,7 @@ const ReportsPage = ({ reports, setReports, highlighted, setHighlighted }) => {
     },
   ];
 
-  const reporters = [man1, man2, man3, man4];
+  const reporters = [man1, man2, man3, man4,man5];
 
   // פונקציה שמגרילה אלמנט ממערך
   function getRandomElement(array) {
