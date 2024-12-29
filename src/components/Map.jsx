@@ -18,8 +18,6 @@ import { TaimLst } from '../store/dec'
 import AlertWithToastify from './Alerts';
 import ShowWay from './showWay';
 import MyLocation from './MyLocation'
-
-
 const bounds = [[0, 0], [700, 700]];
 const fireCoords = { lat: 510.11, lng: 177.91 };
 
@@ -203,7 +201,11 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
             timeStyle: 'short'
           });
 
-          const newReport = { id: Date.now(), text: activeAction.reportText, isRecording: false, time: timeSent }
+          const newReport = { id: Date.now(),
+             text: activeAction.reportText, 
+             isRecording: false, 
+             profilePic: activeAction.profilePic ,
+             time: timeSent }
 
           setReports((prevReports) => [
             ...prevReports,
@@ -370,9 +372,6 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
     setPopupMessage(""); // לסגור את ההודעה
   };
   
-
-
-
   return (
     <div className='map'>
       <ActionsBar activeAction={activeAction} setActiveAction={setActiveAction} />
