@@ -6,7 +6,7 @@ import fireIcon from './assets/fire-icon.svg';
 import logoShabas from './assets/logoShabas.png';
 import FireAlarm from './components/FireAlarm'
 import appIcon from './assets/apppp.png'
-import appBoard from './assets/app-icon.png'
+import appBoard from './assets/apps.png'
 import loadingimg from './assets/landing.png'
 import Timer from './components/Timer'
 import man1 from './assets/actions_icons/man1.png';

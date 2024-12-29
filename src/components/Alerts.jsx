@@ -5,12 +5,15 @@ import './Alerts.css';
 
 const AlertWithToastify = () => {
 
-  const notify = (text = "ההודעה שלך כאן!") => toast(text);
+  const notify = (text = "ההודעה שלך כאן!") => toast(text, {
+    autoClose: false, // ההודעה לא תסגר אוטומטית
+    closeOnClick: true, // תסגר בלחיצה בלבד
+  });
 
   useEffect(() => {
     notify("יש לסגור ברז גז מס’ 675")
-    
-    
+
+
     const timeout1 = setTimeout(() => {
       notify("יש להוריד שאלטר בלוח חשמל מערבי אגף 6");
     }, 2500);
