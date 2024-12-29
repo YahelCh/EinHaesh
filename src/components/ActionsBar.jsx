@@ -15,19 +15,25 @@ import fireCabinetIconActive from '../assets/actions_icons/fireCabinetIconActive
 import iconParking from '../assets/actions_icons/iconParking.svg';
 import pinuyActive from '../assets/actions_icons/pinuyActive.svg';
 import pinuy from '../assets/actions_icons/pinuy.svg';
-// import iconParkingActive from '../assets/actions_icons/iconParkingActive';
+import manReport1 from '../assets/actions_icons/manReport.png';
+import manReport2 from '../assets/actions_icons/manReport2.png';
+import manReport3 from '../assets/actions_icons/manReport3.png';
+import manReport4 from '../assets/actions_icons/manReport4.png';
+import manReport5 from '../assets/actions_icons/manReport5.png';
+import manReport6 from '../assets/actions_icons/manReport6.png';
+
+
+
 
 
 const ActionsBar = ({ setActiveAction, activeAction, onParkingClick }) => {
     const actions = [
-        { name: 'shalter', icon: iconShalter, activeIcon: iconShalterActive, reportText: 'הורדת שאלטר מערבי אגף 8' },
-        { name: 'trapped', icon: iconTrapped, activeIcon: iconTrappedActive, reportText: 'דיווח על לכודים תא 12' },
-        { name: 'smoke', icon: iconSmoke, activeIcon: iconSmokeActive, reportText: 'עשן חדר אוכל ותאים 2,3,4' },
-        { name: 'gas', icon: gasTapIcon, activeIcon: gasTapIconActive, reportText: 'סגירת ברז גז' },
-        { name: 'fireCabinet', icon: fireCabinetIcon, activeIcon: fireCabinetIconActive, reportText: 'שימוש בציוד ארון כיבוי' },
-        { name: 'pinuy', icon: pinuy, activeIcon: pinuyActive, reportText: 'פינוי אסירים' },
-
-
+        { name: 'shalter', icon: iconShalter, activeIcon: iconShalterActive, reportText: 'הורדת שאלטר מערבי אגף 8', profilePic: manReport1 },
+        { name: 'trapped', icon: iconTrapped, activeIcon: iconTrappedActive, reportText: 'דיווח על לכודים תא 12' , profilePic: manReport2},
+        { name: 'smoke', icon: iconSmoke, activeIcon: iconSmokeActive, reportText: 'עשן חדר אוכל ותאים 2,3,4', profilePic: manReport3 },
+        { name: 'gas', icon: gasTapIcon, activeIcon: gasTapIconActive, reportText: 'סגירת ברז גז', profilePic: manReport4 },
+        { name: 'fireCabinet', icon: fireCabinetIcon, activeIcon: fireCabinetIconActive, reportText: 'שימוש בציוד ארון כיבוי' , profilePic: manReport5},
+        { name: 'pinuy', icon: pinuy, activeIcon: pinuyActive, reportText: 'פינוי אסירים' , profilePic: manReport6},
     ];
 
     return (

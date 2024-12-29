@@ -22,32 +22,17 @@ function App() {
      profilePic: man1 ,
   },]);
   const [highlighted, setHighlighted] = useState(null);
-
-
   const [fireFightingView, setFireFightingView] = useState(false)
   const [isAnimating, setIsAnimating] = useState(true);
 
   useEffect(() => {
-    // setTimeout(() => setIsAnimating(true), 100);
-    // setTimeout(() => setIsAnimating(false), 800); // משך האנימציה
 
-    // setTimeout(() => {
-    //   if (isAppShown) {
-    //     setIsAppShown(false);
-
-    //     setIsWaringOpoup(true);
-
-    //   }
-    // }, 2000);
   }, []
   )
-
   const appClick = () => {
     setIsAppShown(false);
-
     setIsWaringOpoup(true);
   }
-
   return (
     <>
       {!(isAppShown) && <div className='main'>
@@ -69,26 +54,16 @@ function App() {
               }}              >
                 <img src={fireIcon} alt="Fire Icon" width="30" height="30" />
               </div>
-
               <Timer />
               <FireAlarm />
 
-
             </div>
-
-
           </div>
           <div className='map-wrapper'>
             <Map isWaringOpoup={isWaringOpoup} fireFightingView={fireFightingView} reports={reports} setReports={setReports} setHighlighted={setHighlighted} ></Map>
           </div>
         </div>
-        {/* <div style={{ position: 'absolute' }} onClick={() => setFireFightingView(!fireFightingView)}>תכנן פעולות כב"ה</div> */}
-
-
-
-
-
-
+      
       </div >}
       {(isAppShown || isWaringOpoup) && <div className="modal">
 
@@ -102,11 +77,10 @@ function App() {
               console.log('dasdad');
               setIsWaringOpoup(false)
             }}></div>)}
-
       </div>}
-
     </>
   );
 }
-
 export default App;
+
+
