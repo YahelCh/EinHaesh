@@ -86,9 +86,10 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
   const [taimList, setTaimList] = useState(TaimLst);
   const [locationMarker, setLocationMarker] = useState(null);
   const [zoomMap, setZoomMap] = useState(false);
+  const [polilineLst, setPolilineLst] = useState([]);
 
   const mapRef = useRef();
- 
+
 
   const Parking = ({ position, index, iconKey }) => {
 
@@ -188,7 +189,7 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
         if (activeAction && activeAction.activeIcon) {
           const newMarker = event.latlng;
           console.log(event.latlng);
-    
+
           const icon = L.divIcon({
             className: "custom",
             html: `<div class="action-mark"><img src="${activeAction.activeIcon}" style=" height: 20px;, width:20px;"  /></div>`, // חניה שמאלית למטה
@@ -201,11 +202,13 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
             timeStyle: 'short'
           });
 
-          const newReport = { id: Date.now(),
-             text: activeAction.reportText, 
-             isRecording: false, 
-             profilePic: activeAction.profilePic ,
-             time: timeSent }
+          const newReport = {
+            id: Date.now(),
+            text: activeAction.reportText,
+            isRecording: false,
+            profilePic: activeAction.profilePic,
+            time: timeSent
+          }
 
           setReports((prevReports) => [
             ...prevReports,
@@ -221,9 +224,9 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
     });
   };
 
- // הנקודה של האש 
+  // הנקודה של האש 
   const [activeMessage, setActiveMessage] = useState(null)
-  const [popupMessage, setPopupMessage] = useState(""); 
+  const [popupMessage, setPopupMessage] = useState("");
 
   const handleOnClickOnParking = (parkingName) => {
     console.log(`Clicked on: ${parkingName}`);
@@ -231,7 +234,7 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
 
     const { message, arrow } = parkingMessages[parkingName]; // נשלוף גם את ההודעה וגם את סוג החץ
     setActiveMessage(message);
-    setPopupMessage({ message, arrow }); 
+    setPopupMessage({ message, arrow });
 
     if (activeRoute === parkingName) {
       setActiveRoute(null);
@@ -248,13 +251,19 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
 
       setActiveRoute(parkingName);
       setLocationMarker(route[0]);
-      if (route && mapRef.current) {
-        const map = mapRef.current;
-        const polyline = L.polyline(route.map((point) => [point.lat, point.lng]), {
-          color: '#007AFF',
-          weight: 5,
-          opacity: 0.7,
-        }).addTo(map);
+      if (route && mapRef.current && !zoomMap) {
+        const polyline = {
+          positions: route.map((point) => [point.lat, point.lng]),
+          pathOptions:
+          {
+            color: '#007AFF',
+            weight: 5,
+            opacity: 0.7
+          }
+        }
+        let lst = polilineLst;
+        lst.push(polyline)
+        setPolilineLst(lst)
       }
     }
   };
@@ -325,8 +334,8 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
     parking4: { message: 'לך 300 מטר לכיוון מקור השריפה, 3 דלתות ושער 1 בדרך', arrow: 'rightArrow' },
     parking5: { message: 'לך 700 מטר לכיוון מקור השריפה, 2 דלתות ושער 1 בדרך', arrow: 'leftArrow' }
   };
-  
- 
+
+
   const LocationIcon = () => {
     const map = useMap();
     const [locationIconSize, setLocationIconSize] = useState({ width: 40, height: 40 });
@@ -371,7 +380,7 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
   const handleClosePopup = () => {
     setPopupMessage(""); // לסגור את ההודעה
   };
-  
+
   return (
     <div className='map'>
       <ActionsBar activeAction={activeAction} setActiveAction={setActiveAction} />
@@ -386,7 +395,7 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
         ref={mapRef}
       >
         {!isWaringOpoup && <AlertWithToastify />}
-        <ShowWay setZoomMap={setZoomMap}  />
+        <ShowWay setZoomMap={setZoomMap} />
         <BaseMap zoomMap={zoomMap} />
         {!zoomMap &&
           markers.map((marker, index) => (
@@ -400,22 +409,21 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
 
         {/* {showParking && !zoomMap && (
         <BaseMap /> */}
-        
-        {markers.map((marker, index) => (
+
+        {!zoomMap && markers.map((marker, index) => (
           <Marker key={index} {...marker} />
         ))}
-        {locationMarker && <LocationIcon />}
-        <ParkingLegendMark handleParkingClick={() => setShowParking(prev => !prev)} />
-  
-        {showParking && (
+        {locationMarker && !zoomMap && showParking && <LocationIcon />}
+
+        {showParking && !zoomMap && (
           <>
             {parkingPoints.map((point, index) => (
               <>
-                <Parking 
-                  index={index} 
-                  key={index} 
-                  position={[point.lat, point.lng]} 
-                  iconKey={point.icon} 
+                <Parking
+                  index={index}
+                  key={index}
+                  position={[point.lat, point.lng]}
+                  iconKey={point.icon}
                 />
               </>
             ))}
@@ -423,18 +431,22 @@ const Map = ({ setReports, setHighlighted, isWaringOpoup }) => {
         )}
 
         {!zoomMap && <FireIcon />}
-        {/* {!zoomMap && <Taim handleClickZone={handleClickZone} taimList={taimList} />} */}
-  
+        {showParking && !zoomMap && polilineLst.map((pol, index) => (
+          <Polyline  {...pol}>
+          </Polyline >
+        ))}
+
+
         {/* הצגת ההודעה הקופצת */}
         {popupMessage && <PopupMessage message={popupMessage} onClose={handleClosePopup} />}
-  
-      
+
+
         {/* <Taim handleClickZone={handleClickZone} taimList={taimList} /> */}
         <MapClickHandler />
       </MapContainer>
     </div>
   );
-  
+
 };
 
 export default Map;
