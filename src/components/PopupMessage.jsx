@@ -5,18 +5,10 @@ import leftArrowImg from '../assets/actions_icons/left-arrow.svg';
 
     const PopupMessage = ({ message: { message, arrow }, onClose }) => {
 
-  useEffect(() => {
-    console.log(message)
-    const timer = setTimeout(() => {
-      onClose(); 
-    }, 3000); 
-
-    return () => clearTimeout(timer); 
-  }, [onClose]);
   const arrowImg = arrow === 'rightArrow' ? rightArrowImg : leftArrowImg;
 
   return (
-    <div 
+    <div  onClick={onClose} 
       style={{
         position: 'fixed',
         bottom: '6%',
@@ -46,7 +38,10 @@ import leftArrowImg from '../assets/actions_icons/left-arrow.svg';
       <img 
         src={cancelIcon} 
         alt="סגור" 
-        onClick={onClose} 
+        onClick={(e) => { 
+          e.stopPropagation(); 
+          onClose();
+        }} 
         style={{
           position: 'absolute',
           top: '5px',

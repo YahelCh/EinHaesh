@@ -260,7 +260,7 @@ const ReportsPage = ({ reports, setReports, highlighted, setHighlighted }) => {
                 className={`chat-bubble ${report.isOutgoing ? 'outgoing' : ''
                   } ${report.isTranscription ? 'transcription' : ''}  ${highlighted === report.id ? "highlight" : ""}`}
               >
-                <p>{report.text}</p>
+                <div>{report.text}</div>
                 <div className="message-meta">
                   <span className="time">{report.time}</span>
                   {/* <span className="seen">{report.isSeen ? '✓✓' : ''}</span> */}
