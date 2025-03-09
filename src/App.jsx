@@ -3,7 +3,7 @@ import './App.css';
 import Map from './components/Map';
 import ReportsPage from './components/ReportsPage';
 import fireIcon from './assets/fire-icon.svg';
-import logoShabas from './assets/logoShabas.png';
+import logoShabas from './assets/logoShabas.png'
 import FireAlarm from './components/FireAlarm'
 import appIcon from './assets/apppp.png'
 import appBoard from './assets/apps.png'
